@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Graph Theory — Complete Study Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=JetBrains+Mono:wght@400;600&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#0d0f1a;--bg2:#13162a;--bg3:#1a1e35;--card:#1e2240;--border:#2a2f55;--accent:#6c63ff;--accent2:#00d4aa;--accent3:#ff6b6b;--accent4:#ffd166;--text:#e8eaf6;--text2:#9ba3d4;--text3:#5c6494;--purple:#6c63ff;--teal:#00d4aa;--coral:#ff6b6b;--amber:#ffd166;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Source Sans 3',sans-serif;font-size:16px;line-height:1.8;overflow-x:hidden;}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;background:radial-gradient(ellipse at 30% 50%,#1a0a4a 0%,transparent 60%),radial-gradient(ellipse at 70% 30%,#0a2a3a 0%,transparent 60%),var(--bg);}
+.hero-canvas{position:absolute;inset:0;opacity:.25;}
+.hero-content{position:relative;z-index:2;text-align:center;padding:2rem;animation:fadeUp 1s ease both;}
+.hero-tag{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.3em;color:var(--accent2);text-transform:uppercase;margin-bottom:1.5rem;display:block;}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(3rem,8vw,7rem);font-weight:900;line-height:1.05;background:linear-gradient(135deg,#fff 0%,var(--accent) 50%,var(--accent2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:1rem;}
+.hero-sub{font-size:1.1rem;color:var(--text2);max-width:520px;margin:0 auto 2.5rem;}
+.hero-pills{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;margin-bottom:2.5rem;}
+.pill{background:rgba(108,99,255,.15);border:1px solid rgba(108,99,255,.3);color:var(--accent);padding:.3rem 1rem;border-radius:999px;font-size:.8rem;font-family:'JetBrains Mono',monospace;cursor:pointer;transition:all .2s;text-decoration:none;}
+.pill:hover{background:rgba(108,99,255,.3);transform:translateY(-2px);}
+.scroll-hint{color:var(--text3);font-size:.8rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;animation:bounce 2s infinite;}
+.scroll-hint::after{content:'↓';font-size:1.2rem;}
+.toc{position:sticky;top:0;z-index:100;background:rgba(13,15,26,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:.8rem 2rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;}
+.toc-label{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--text3);letter-spacing:.2em;text-transform:uppercase;margin-right:.5rem;white-space:nowrap;}
+.toc a{font-size:.75rem;color:var(--text2);text-decoration:none;padding:.25rem .7rem;border-radius:4px;white-space:nowrap;transition:all .2s;font-family:'JetBrains Mono',monospace;}
+.toc a:hover{color:var(--accent);background:rgba(108,99,255,.12);}
+.section{max-width:980px;margin:0 auto;padding:5rem 2rem;border-bottom:1px solid var(--border);opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease;}
+.section.visible{opacity:1;transform:none;}
+.section-header{display:flex;align-items:flex-start;gap:1.5rem;margin-bottom:2.5rem;}
+.section-num{font-family:'Playfair Display',serif;font-size:4rem;font-weight:900;color:var(--border);line-height:1;flex-shrink:0;min-width:4rem;}
+.section-tag{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.25em;text-transform:uppercase;margin-bottom:.4rem;display:block;}
+.section h2{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;line-height:1.2;}
+.prose{color:var(--text2);font-size:.97rem;line-height:1.9;margin:1rem 0;}
+.prose strong{color:var(--text);}
+.def-box{background:rgba(108,99,255,.08);border-left:4px solid var(--accent);padding:1.2rem 1.5rem;border-radius:0 10px 10px 0;margin:1.5rem 0;}
+.def-box .def-label{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem;display:block;}
+.def-box p{color:var(--text2);font-size:.95rem;line-height:1.85;}
+.def-box p strong{color:var(--text);}
+.thm-box{background:rgba(0,212,170,.07);border-left:4px solid var(--accent2);padding:1.2rem 1.5rem;border-radius:0 10px 10px 0;margin:1.5rem 0;}
+.thm-box .thm-label{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent2);margin-bottom:.5rem;display:block;}
+.thm-box p{color:var(--text2);font-size:.95rem;line-height:1.85;}
+.thm-box p strong{color:var(--text);}
+.warn-box{background:rgba(255,209,102,.07);border-left:4px solid var(--amber);padding:1.2rem 1.5rem;border-radius:0 10px 10px 0;margin:1.5rem 0;}
+.warn-box .warn-label{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin-bottom:.5rem;display:block;}
+.warn-box p{color:var(--text2);font-size:.95rem;line-height:1.85;}
+.formula{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1rem 1.5rem;font-family:'JetBrains Mono',monospace;font-size:1.05rem;text-align:center;color:var(--amber);margin:1.2rem 0;letter-spacing:.05em;}
+.step-list{counter-reset:step;margin:1.2rem 0;}
+.step-item{counter-increment:step;display:flex;gap:1rem;align-items:flex-start;margin:.7rem 0;}
+.step-item::before{content:counter(step);background:var(--accent);color:#fff;font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:700;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.15rem;}
+.step-item p{color:var(--text2);font-size:.92rem;line-height:1.8;}
+.step-item p strong{color:var(--text);}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0;position:relative;overflow:hidden;}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.card.purple::before{background:linear-gradient(90deg,var(--accent),transparent);}
+.card.teal::before{background:linear-gradient(90deg,var(--accent2),transparent);}
+.card.coral::before{background:linear-gradient(90deg,var(--coral),transparent);}
+.card.amber::before{background:linear-gradient(90deg,var(--amber),transparent);}
+.card h3{font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:.8rem;font-weight:700;}
+.card p{color:var(--text2);font-size:.92rem;line-height:1.8;margin:.4rem 0;}
+.card p strong{color:var(--text);}
+.tbl-wrap{overflow-x:auto;margin:1.2rem 0;}
+table{width:100%;border-collapse:collapse;font-size:.88rem;}
+th{background:var(--bg3);color:var(--text2);padding:.6rem 1rem;text-align:left;font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.1em;border:1px solid var(--border);}
+td{padding:.6rem 1rem;border:1px solid var(--border);color:var(--text);}
+tr:nth-child(even) td{background:rgba(255,255,255,.02);}
+td.yes{color:var(--teal);}td.no{color:var(--coral);}td.hi{color:var(--amber);font-family:'JetBrains Mono',monospace;}
+.interactive{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0;}
+.int-title{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent2);margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;}
+.int-title::before{content:'▶';font-size:.6rem;}
+.btn-row{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem;}
+.ibtn{font-size:.8rem;padding:.35rem .9rem;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-family:'JetBrains Mono',monospace;transition:all .2s;}
+.ibtn:hover{border-color:var(--accent);color:var(--accent);}
+.ibtn.active{background:rgba(108,99,255,.2);border-color:var(--accent);color:var(--accent);}
+.ibtn:disabled{opacity:.4;cursor:default;}
+.iinfo{font-size:.85rem;color:var(--text2);background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.8rem 1rem;margin-top:.8rem;min-height:44px;line-height:1.7;}
+.qa-block{margin:1.2rem 0;}
+.qa-q{background:var(--bg3);border:1px solid var(--border);border-radius:8px 8px 0 0;padding:.8rem 1.2rem;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background .2s;font-size:.92rem;}
+.qa-q:hover{background:var(--card);}
+.qa-q .arrow{transition:transform .3s;font-size:.8rem;flex-shrink:0;margin-left:1rem;}
+.qa-q.open .arrow{transform:rotate(180deg);}
+.qa-a{background:rgba(0,212,170,.05);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;padding:0;max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s;font-size:.9rem;color:var(--text2);line-height:1.8;}
+.qa-a.open{max-height:800px;padding:1rem 1.2rem;}
+.qa-a code{font-family:'JetBrains Mono',monospace;color:var(--amber);font-size:.85rem;}
+.step-table{width:100%;border-collapse:collapse;font-size:.82rem;margin:.5rem 0;}
+.step-table th{background:var(--bg);color:var(--text3);padding:.4rem .8rem;border:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:.7rem;}
+.step-table td{padding:.4rem .8rem;border:1px solid var(--border);text-align:center;}
+.step-table td.done{color:var(--teal);}
+.step-table td.curr{color:var(--amber);font-weight:600;}
+.step-table td.upd{color:var(--accent);}
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin:2rem 0;}
+.summary-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;position:relative;overflow:hidden;transition:transform .2s,border-color .2s;}
+.summary-card:hover{transform:translateY(-3px);border-color:var(--accent);}
+.summary-card .num{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;opacity:.12;position:absolute;top:.5rem;right:1rem;}
+.summary-card h4{font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:.4rem;}
+.summary-card p{font-size:.82rem;color:var(--text2);line-height:1.6;}
+.summary-card .tag{font-family:'JetBrains Mono',monospace;font-size:.65rem;padding:.15rem .5rem;border-radius:4px;display:inline-block;margin-top:.5rem;}
+h3.sub{font-family:'Playfair Display',serif;font-size:1.3rem;margin:2rem 0 1rem;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:none;}}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+@media(max-width:640px){.section-header{flex-direction:column;gap:.5rem;}.section-num{font-size:2.5rem;}}
+</style>
+</head>
+<body>
+
+<section class="hero">
+<canvas class="hero-canvas" id="hero-canvas"></canvas>
+<div class="hero-content">
+  <span class="hero-tag">Discrete Mathematics · Graph Theory · Priyanshu</span>
+  <h1>Graph Theory</h1>
+  <p class="hero-sub">Every topic with full explanations — definitions, theorems with proof intuition, examples, animations, and exam questions. Based on Kenneth H. Rosen.</p>
+  <div class="hero-pills">
+    <a class="pill" href="#iso">Isomorphism</a><a class="pill" href="#paths">Paths & Cycles</a><a class="pill" href="#color">Colouring</a><a class="pill" href="#critical">Critical Path</a><a class="pill" href="#euler">Eulerian</a><a class="pill" href="#hamilton">Hamiltonian</a><a class="pill" href="#bipartite">Bipartite</a><a class="pill" href="#digraph">Digraphs</a><a class="pill" href="#multi">Multigraphs</a><a class="pill" href="#handshake">Handshaking</a><a class="pill" href="#dijkstra">Dijkstra</a>
+  </div>
+  <div class="scroll-hint">Scroll to begin . Thank Priyanshu later</div>
+</div>
+</section>
+
+<nav class="toc">
+  <span class="toc-label">Jump to</span>
+  <a href="#iso">01 Isomorphism</a><a href="#paths">02 Paths</a><a href="#color">03 Colouring</a><a href="#critical">04 Critical Path</a><a href="#euler">05 Eulerian</a><a href="#hamilton">06 Hamiltonian</a><a href="#bipartite">07 Bipartite</a><a href="#digraph">08 Digraphs</a><a href="#multi">09 Multigraphs</a><a href="#handshake">Handshaking</a><a href="#dijkstra">Dijkstra</a>
+</nav>
+
+<!-- ═══════════════════════════ SECTION 1 ═══════════════════════════ -->
+<section class="section" id="iso">
+<div class="section-header"><div class="section-num">01</div><div><span class="section-tag" style="color:var(--purple)">Graph Isomorphism</span><h2>Same structure,<br>different labels</h2></div></div>
+
+<p class="prose">Before understanding isomorphism, recall that a <strong>graph G = (V, E)</strong> consists of a non-empty set V of <strong>vertices</strong> (nodes) and a set E of <strong>edges</strong> connecting pairs of vertices. Two vertices connected by an edge are called <strong>adjacent</strong> or <strong>neighbours</strong>.</p>
+
+<div class="def-box"><span class="def-label">Definition — Graph Isomorphism</span><p>Two graphs G₁ and G₂ are <strong>isomorphic</strong> (written G₁ ≅ G₂) if there exists a <strong>bijection</strong> f: V(G₁) → V(G₂) such that (u,v) ∈ E(G₁) <strong>if and only if</strong> (f(u),f(v)) ∈ E(G₂). The function f is called the <strong>isomorphism</strong>.</p></div>
+
+<p class="prose">In plain English: two graphs are isomorphic if one can be <strong>relabelled</strong> to become the other. They are the same abstract graph — just drawn differently or named differently. Think of two maps of the same city, one in English and one in Hindi. Same roads, same intersections, only names differ — that is isomorphism.</p>
+
+<div class="interactive"><div class="int-title">Live Isomorphism Explorer</div>
+<div class="btn-row"><button class="ibtn active" onclick="isoShow('iso',this)">Isomorphic pair</button><button class="ibtn" onclick="isoShow('notiso',this)">Non-isomorphic pair</button></div>
+<svg viewBox="0 0 700 260" id="iso-svg" style="background:var(--bg);border-radius:8px;width:100%;"><defs><marker id="ia" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round"/></marker></defs><g id="iso-g1"></g><g id="iso-g2"></g><g id="iso-map"></g><text id="iso-verdict" x="350" y="248" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="12" fill="#9ba3d4"></text></svg>
+<div class="iinfo" id="iso-info"></div></div>
+
+<h3 class="sub">The Golden Rule — How to Construct a Bijection</h3>
+<p class="prose">You may <strong>only</strong> map vertex u in G₁ to vertex v in G₂ if <strong>deg(u) = deg(v)</strong>. This is because isomorphism preserves adjacency — if u has 3 neighbours in G₁, then f(u) must also have exactly 3 neighbours in G₂. After grouping by degree, try mappings and verify every edge corresponds.</p>
+
+<div class="step-list">
+<div class="step-item"><p><strong>Check vertex count:</strong> |V(G₁)| must equal |V(G₂)|. If different, immediately not isomorphic.</p></div>
+<div class="step-item"><p><strong>Check edge count:</strong> |E(G₁)| must equal |E(G₂)|. Bijection preserves edges.</p></div>
+<div class="step-item"><p><strong>Compute and compare degree sequences:</strong> List degrees of all vertices in each graph, sort both lists. Must be identical.</p></div>
+<div class="step-item"><p><strong>Construct bijection:</strong> Map degree-2 vertices to degree-2, degree-3 to degree-3, etc. Then verify every edge (u,w) in G₁ has a corresponding edge (f(u),f(w)) in G₂.</p></div>
+</div>
+
+<div class="warn-box"><span class="warn-label">Critical Warning</span><p>The degree sequence check is <strong>necessary but not sufficient</strong>. Two graphs can have identical vertex count, edge count, and degree sequence — and still not be isomorphic. The only proof of isomorphism is exhibiting a valid bijection. The only proof of non-isomorphism is either a failed invariant OR proving no valid bijection exists.</p></div>
+
+<div class="tbl-wrap"><table><tr><th>Condition</th><th>What it checks</th><th>If it fails</th></tr><tr><td>Same |V|</td><td>Vertex count</td><td class="no">Definitely not isomorphic</td></tr><tr><td>Same |E|</td><td>Edge count</td><td class="no">Definitely not isomorphic</td></tr><tr><td>Same degree sequence</td><td>Sorted degree list</td><td class="no">Definitely not isomorphic</td></tr><tr><td>Same # components</td><td>Connectivity</td><td class="no">Definitely not isomorphic</td></tr><tr><td>All pass</td><td>—</td><td class="yes">Try to build bijection</td></tr></table></div>
+
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q1: G₁ degrees=[1,2,2,3], G₂ degrees=[2,2,2,2]. Are they isomorphic?</span><span class="arrow">▼</span></div><div class="qa-a">No. Degree sequences differ: <code>[1,2,2,3] ≠ [2,2,2,2]</code>. G₁ has a degree-1 vertex and a degree-3 vertex which G₂ lacks. Since degree sequence is a graph invariant preserved under isomorphism, these graphs cannot be isomorphic. No need to attempt a bijection.</div></div>
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q2: G₁: 4-cycle (a-b-c-d-a). G₂: 4-cycle (1-2-3-4-1). Are they isomorphic?</span><span class="arrow">▼</span></div><div class="qa-a">|V|=4 ✓, |E|=4 ✓, degree sequence=[2,2,2,2] for both ✓. Bijection: f(a)=1,f(b)=2,f(c)=3,f(d)=4. Check: (a,b)→(1,2)✓, (b,c)→(2,3)✓, (c,d)→(3,4)✓, (d,a)→(4,1)✓. <strong>Isomorphic.</strong></div></div>
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q3: Why is graph isomorphism considered a hard computational problem?</span><span class="arrow">▼</span></div><div class="qa-a">Graph Isomorphism has no known polynomial-time algorithm for general graphs, but is also not proven to be NP-complete — it sits in its own complexity class (GI). For special cases (trees, planar graphs, bounded degree) polynomial algorithms exist. This makes it one of few problems in a "grey zone" of complexity theory, and remains an active research area.</div></div>
+</section>
+
+<!-- ═══════════════════════════ SECTION 2 ═══════════════════════════ -->
+<section class="section" id="paths">
+<div class="section-header"><div class="section-num">02</div><div><span class="section-tag" style="color:var(--teal)">Paths & Cycles</span><h2>Walking through a graph</h2></div></div>
+
+<p class="prose">When we move through a graph following edges, we create different kinds of sequences depending on what repetitions we allow. These form the foundation for Eulerian paths, Hamiltonian paths, connectivity analysis, and almost everything else in graph theory.</p>
+
+<div class="def-box"><span class="def-label">Definition — Walk</span><p>A <strong>walk</strong> is a sequence of vertices v₁,v₂,...,vₙ where each consecutive pair (vᵢ,vᵢ₊₁) is connected by an edge. <strong>Both vertices and edges can repeat.</strong> Length = number of edges traversed (counting repetitions).</p></div>
+<div class="def-box"><span class="def-label">Definition — Trail</span><p>A <strong>trail</strong> is a walk where <strong>no edge repeats</strong>, but vertices may repeat. Think of it as walking through a city never using the same road twice — but revisiting junctions is fine.</p></div>
+<div class="def-box"><span class="def-label">Definition — Path (Simple Path)</span><p>A <strong>path</strong> is a walk where <strong>neither vertices nor edges repeat</strong>. When Rosen says "path" without qualification, this is what he means. Length = number of edges = (number of vertices) − 1.</p></div>
+<div class="def-box"><span class="def-label">Definition — Circuit</span><p>A <strong>circuit</strong> is a closed trail — starts and ends at the same vertex, <strong>no edge repeats</strong>, but intermediate vertices may repeat.</p></div>
+<div class="def-box"><span class="def-label">Definition — Cycle (Simple Cycle)</span><p>A <strong>cycle</strong> is a closed path — starts and ends at the same vertex, <strong>no edge repeats AND no intermediate vertex repeats</strong>. Cycle of length k = k edges, k distinct vertices. Smallest possible cycle: length 3 (triangle, C₃).</p></div>
+
+<div class="interactive"><div class="int-title">Walk → Trail → Path → Cycle — Click to Explore</div>
+<div class="btn-row"><button class="ibtn active" onclick="pathShow('walk',this)">Walk</button><button class="ibtn" onclick="pathShow('trail',this)">Trail</button><button class="ibtn" onclick="pathShow('path',this)">Path</button><button class="ibtn" onclick="pathShow('cycle',this)">Cycle</button><button class="ibtn" onclick="pathShow('circuit',this)">Circuit</button></div>
+<svg viewBox="0 0 700 230" id="path-svg" style="background:var(--bg);border-radius:8px;width:100%;"><g id="path-edges"></g><g id="path-verts"></g></svg>
+<div class="iinfo" id="path-info"></div></div>
+
+<h3 class="sub">Circuit vs Cycle — The Exact Distinction</h3>
+<p class="prose">Both are <strong>closed</strong> (start = end) and both have <strong>no repeated edges</strong>. The only difference:</p>
+<p class="prose">A <strong>circuit</strong> allows intermediate vertex repetition — you can pass through the same junction multiple times, using different roads each time. A <strong>cycle</strong> does NOT allow intermediate vertex repetition — every junction visited exactly once.</p>
+<p class="prose"><strong>Hierarchy:</strong> Cycle ⊂ Circuit ⊂ Trail ⊂ Walk. Every cycle is a circuit, but not every circuit is a cycle.</p>
+
+<div class="tbl-wrap"><table><tr><th>Concept</th><th>Vertices repeat?</th><th>Edges repeat?</th><th>Closed?</th><th>Key point</th></tr><tr><td>Walk</td><td class="yes">Yes</td><td class="yes">Yes</td><td>Optional</td><td>No restrictions</td></tr><tr><td>Trail</td><td class="yes">Yes</td><td class="no">No</td><td>Optional</td><td>Each edge ≤ once</td></tr><tr><td>Path</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td>Most restricted open walk</td></tr><tr><td>Circuit</td><td class="yes">Yes (intermediate)</td><td class="no">No</td><td class="yes">Yes</td><td>Closed trail</td></tr><tr><td>Cycle</td><td class="no">No (except endpoints)</td><td class="no">No</td><td class="yes">Yes</td><td>Most restricted closed walk</td></tr></table></div>
+
+<div class="thm-box"><span class="thm-label">Theorem — Connectivity and Paths</span><p><strong>A graph G is connected if and only if there exists a path between every pair of vertices.</strong> This is the fundamental definition of connectivity — no pair of vertices is stranded without a route between them.</p></div>
+<div class="thm-box"><span class="thm-label">Theorem — Long Walks Contain Cycles</span><p><strong>Any walk of length ≥ n in an n-vertex graph must repeat a vertex, hence contains a cycle.</strong> A path can visit at most n distinct vertices, so length n−1 at most. Any longer walk must revisit.</p></div>
+
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q1: List all simple paths from A to D in V={A,B,C,D}, E={(A,B),(B,C),(C,D),(A,C),(B,D)}.</span><span class="arrow">▼</span></div><div class="qa-a">Simple paths (no repeated vertices):<br>• A→B→D (length 2)<br>• A→B→C→D (length 3)<br>• A→C→D (length 2)<br>• A→C→B→D (length 3)<br>All four are valid. Note the lengths — 2 edges and 3 edges.</div></div>
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q2: Is a walk that visits every edge of a graph always an Eulerian circuit?</span><span class="arrow">▼</span></div><div class="qa-a">No. An Eulerian circuit is a <em>circuit</em> (closed trail) that uses every edge exactly once. A walk might use edges multiple times. For Eulerian we specifically need a circuit (closed, no edge repeats) covering all edges — not just any walk.</div></div>
+</section>
+
+<!-- ═══════════════════════════ SECTION 3 ═══════════════════════════ -->
+<section class="section" id="color">
+<div class="section-header"><div class="section-num">03</div><div><span class="section-tag" style="color:var(--coral)">Graph Colouring</span><h2>Minimum colours,<br>no two neighbours match</h2></div></div>
+
+<p class="prose">Graph colouring arises naturally in scheduling (no two conflicting tasks share a time slot), register allocation in compilers, map colouring, and frequency assignment in wireless networks. The constraint is always the same: adjacent vertices must get different colours.</p>
+
+<div class="def-box"><span class="def-label">Definition — Proper Vertex Colouring</span><p>An assignment of colours to vertices of G such that no two <strong>adjacent vertices</strong> receive the same colour. Colours are just labels — numbers, names, or actual colours.</p></div>
+<div class="def-box"><span class="def-label">Definition — Chromatic Number χ(G)</span><p>The <strong>chromatic number χ(G)</strong> ("chi of G") is the <strong>minimum number of colours</strong> needed to properly colour all vertices of G. Finding χ(G) for a general graph is NP-hard.</p></div>
+
+<div class="interactive"><div class="int-title">Chromatic Number Explorer — See Optimal Colourings</div>
+<div class="btn-row"><button class="ibtn active" onclick="colorShow('k4',this)">K₄</button><button class="ibtn" onclick="colorShow('c5',this)">C₅ — odd cycle</button><button class="ibtn" onclick="colorShow('c6',this)">C₆ — even cycle</button><button class="ibtn" onclick="colorShow('tree',this)">Tree</button></div>
+<svg viewBox="0 0 700 240" id="color-svg" style="background:var(--bg);border-radius:8px;width:100%;"><g id="color-edges"></g><g id="color-verts"></g><text id="color-chi" x="650" y="42" text-anchor="middle" font-family="Playfair Display,serif" font-size="30" font-weight="700"></text><text id="color-chi-label" x="650" y="60" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" fill="#5c6494">χ(G)</text></svg>
+<div class="iinfo" id="color-info"></div></div>
+
+<h3 class="sub">Why Odd Cycles Force a Third Colour</h3>
+<p class="prose">This is the single most important intuition in graph colouring. Consider a triangle A–B–C (3-cycle). Try 2 colours: A=Purple → B=Teal (adjacent to A) → C is adjacent to both A(Purple) and B(Teal). C cannot be either → <strong>third colour forced</strong>.</p>
+<p class="prose">For a square A–B–C–D (4-cycle, even): A=Purple, B=Teal, C=Purple, D=Teal. D is adjacent to C(Purple) and A(Purple). D=Teal works. Only 2 colours. <strong>Even cycles need 2, odd cycles need 3.</strong> This is why odd cycles and bipartite graphs are so connected.</p>
+
+<div class="tbl-wrap"><table><tr><th>Graph type</th><th>χ(G)</th><th>Reason</th></tr><tr><td>Empty graph (no edges)</td><td class="hi">1</td><td>No constraints at all</td></tr><tr><td>Any tree or forest</td><td class="hi">2</td><td>Bipartite — no odd cycles</td></tr><tr><td>Even cycle C₂ₖ</td><td class="hi">2</td><td>Alternate 2 colours — no conflict</td></tr><tr><td>Odd cycle C₂ₖ₊₁</td><td class="hi">3</td><td>Third colour forced at closing vertex</td></tr><tr><td>Complete graph Kₙ</td><td class="hi">n</td><td>All mutually adjacent — all different</td></tr><tr><td>Bipartite graph</td><td class="hi">≤ 2</td><td>Two parts = two colour classes</td></tr><tr><td>Planar graph</td><td class="hi">≤ 4</td><td>Four Colour Theorem (1976)</td></tr></table></div>
+
+<div class="thm-box"><span class="thm-label">Theorem — Greedy Upper Bound</span><p><strong>χ(G) ≤ Δ(G) + 1</strong> where Δ(G) is the maximum degree.<br><br><strong>Why it works:</strong> Colour vertices one by one. When you reach vertex v, it has at most Δ(G) already-coloured neighbours, each potentially using a different colour. At most Δ(G) colours are forbidden. Colour Δ(G)+1 is always available.</p></div>
+<div class="thm-box"><span class="thm-label">Theorem — Brook's Theorem (1941)</span><p><strong>For any connected G that is neither Kₙ nor an odd cycle: χ(G) ≤ Δ(G).</strong><br><br>This tightens the greedy bound by 1 for most graphs. The exceptions are Kₙ (where χ=n=Δ+1) and odd cycles (where χ=3 but Δ=2, so Δ+1=3 is tight). For all other connected graphs, one fewer colour than the greedy bound suffices.</p></div>
+<div class="thm-box"><span class="thm-label">Theorem — Clique Lower Bound</span><p><strong>If G contains Kₙ as a subgraph (a clique of size n): χ(G) ≥ n.</strong><br><br>In a clique, all n vertices are mutually adjacent — each needs a distinct colour. The chromatic number of the entire graph must be at least as large as the largest clique.</p></div>
+<div class="thm-box"><span class="thm-label">Theorem — Four Colour Theorem (1976)</span><p><strong>Every planar graph can be properly coloured with at most 4 colours.</strong><br><br>Open problem for 100+ years. Proved by Appel and Haken in 1976 using a computer to check 1,936 cases — the first major theorem proved with computer assistance. Means any political map needs at most 4 colours.</p></div>
+
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q1: Find χ(K₅) and justify.</span><span class="arrow">▼</span></div><div class="qa-a">K₅ has 5 vertices, all mutually adjacent. Every vertex needs a colour different from all 4 others. <code>χ(K₅)=5</code>. Also Δ(K₅)=4 and Kₙ is the exception in Brook's theorem, so χ=Δ+1=5. ✓</div></div>
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q2: G has 6 vertices each of degree 4. What is the upper bound on χ(G)?</span><span class="arrow">▼</span></div><div class="qa-a">Δ(G)=4. Greedy bound: χ ≤ 5. G is not K₅ (would need 5 vertices all degree 4, but K₅ has degree 4 — actually G could be K₅ with an extra isolated vertex, but here all 6 have degree 4). If G is not Kₙ or an odd cycle, Brook's theorem gives <code>χ(G) ≤ 4</code>.</div></div>
+</section>
+
+<!-- ═══════════════════════════ SECTION 4 ═══════════════════════════ -->
+<section class="section" id="critical">
+<div class="section-header"><div class="section-num">04</div><div><span class="section-tag" style="color:var(--amber)">Critical Path Method</span><h2>The longest path = your deadline</h2></div></div>
+
+<p class="prose">Critical Path Method (CPM) is a project scheduling technique using weighted directed graphs. It finds the minimum possible project duration by identifying the longest chain of dependent tasks — the bottleneck chain you cannot speed up without doing the tasks faster.</p>
+
+<div class="def-box"><span class="def-label">Definition — DAG (Directed Acyclic Graph)</span><p>A directed graph with <strong>no directed cycles</strong>. Real projects use DAGs because no task can depend on itself (circular dependencies don't exist in practice). Vertices = events/tasks, directed edges = dependencies ("A must finish before B starts"), edge weights = task durations.</p></div>
+<div class="def-box"><span class="def-label">Definition — Critical Path</span><p>The <strong>longest weighted directed path</strong> from source (project start) to sink (project end) in the DAG. Its total weight = <strong>minimum possible project duration</strong>. Any task on the critical path has <strong>zero float</strong> — delaying it directly delays the project.</p></div>
+
+<h3 class="sub">EST and LST — The Two Passes</h3>
+<p class="prose"><strong>EST (Earliest Start Time)</strong> = earliest time a task can begin, assuming all predecessors start as early as possible. Computed by <strong>forward pass</strong> — go left to right, take the maximum over all incoming paths. We take maximum because the task cannot start until ALL predecessors finish, and the last to finish determines the earliest start.</p>
+<p class="prose"><strong>LST (Latest Start Time)</strong> = latest time a task can begin without delaying the project. Computed by <strong>backward pass</strong> — go right to left, take the minimum over all outgoing paths. We take minimum because starting later than any successor requires will delay that successor.</p>
+<p class="prose"><strong>Float (Slack)</strong> = LST − EST. How much a task can be delayed without affecting the deadline. Float=0 means critical.</p>
+
+<div class="interactive"><div class="int-title">Forward Pass → Backward Pass → Float → Critical Path</div>
+<div class="btn-row"><button class="ibtn" id="cp-prev" onclick="cpStep(-1)" disabled>← Prev</button><span id="cp-label" style="font-size:.8rem;color:var(--text2);font-family:JetBrains Mono,monospace;"></span><button class="ibtn" id="cp-next" onclick="cpStep(1)">Next →</button></div>
+<svg viewBox="0 0 700 200" id="cp-svg" style="background:var(--bg);border-radius:8px;width:100%;"><defs><marker id="cpa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round"/></marker></defs><g id="cp-edges"></g><g id="cp-verts"></g></svg>
+<div class="iinfo" id="cp-info"></div><div id="cp-table" style="margin-top:.8rem;overflow-x:auto;"></div></div>
+
+<div class="card amber">
+<h3>Float Formula — Covers Every Exam Scenario</h3>
+<div class="formula">Delay to project = max(0, k − float)</div>
+<div class="tbl-wrap"><table><tr><th>Scenario</th><th>Project delay</th><th>New float</th></tr><tr><td>Critical task increases by k</td><td class="no">k (always delayed)</td><td class="hi">0 (still critical)</td></tr><tr><td>Non-critical, k &lt; float</td><td class="yes">0</td><td class="hi">float − k</td></tr><tr><td>Non-critical, k = float</td><td class="yes">0 (barely)</td><td class="hi">0 (now critical)</td></tr><tr><td>Non-critical, k &gt; float</td><td class="no">k − float</td><td class="hi">0 (now critical)</td></tr></table></div>
+</div>
+
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q1: Why is the critical path the LONGEST path, not shortest?</span><span class="arrow">▼</span></div><div class="qa-a">Tasks on the critical path are sequentially dependent — each must wait for the previous. The project can't finish until ALL chains complete — the longest chain finishes last and determines the deadline. Shortest path through the DAG would be faster but doesn't represent the bottleneck. You can't skip the longer chains.</div></div>
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q2: Task B has float=3. Its duration increases by 5. How much is the project delayed?</span><span class="arrow">▼</span></div><div class="qa-a">Delay = max(0, k − float) = max(0, 5−3) = <code>2 days</code>. First 3 days absorb into float. Remaining 2 delay the project. B's new float = 0 (becomes critical).</div></div>
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q3: Can there be multiple critical paths? What does it imply?</span><span class="arrow">▼</span></div><div class="qa-a">Yes — if two or more paths from start to finish have equal maximum total length, all are critical. This makes the project more fragile — any critical task on any critical path delays everything. More tasks have zero float, less scheduling flexibility.</div></div>
+</section>
+
+<!-- ═══════════════════════════ SECTION 5 ═══════════════════════════ -->
+<section class="section" id="euler">
+<div class="section-header"><div class="section-num">05</div><div><span class="section-tag" style="color:var(--purple)">Eulerian Paths & Circuits</span><h2>Traverse every edge exactly once</h2></div></div>
+
+<p class="prose">In 1736, Euler solved the <strong>Königsberg Bridge Problem</strong> — can you walk through Königsberg crossing every bridge exactly once? He proved it impossible and gave the reason in terms of vertex degrees. This invented graph theory.</p>
+
+<div class="def-box"><span class="def-label">Definition — Eulerian Path</span><p>A trail (no edge repeated) that visits <strong>every edge exactly once</strong>. Vertices may be revisited. May start and end at different vertices.</p></div>
+<div class="def-box"><span class="def-label">Definition — Eulerian Circuit</span><p>An Eulerian path that <strong>starts and ends at the same vertex</strong>. Traverses every edge exactly once and returns to start.</p></div>
+
+<p class="prose">Key distinction: Eulerian is about <strong>edges</strong>. Every edge used exactly once. Vertices can repeat. Different from Hamiltonian (Topic 6) which is about vertices.</p>
+
+<svg viewBox="0 0 700 195" style="background:var(--bg);border-radius:8px;width:100%;margin:1rem 0;"><text x="350" y="22" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" fill="#5c6494">Königsberg Bridge Problem (1736) — the origin of graph theory</text><path d="M220 95 Q290 50 360 95" fill="none" stroke="#6c63ff" stroke-width="2.5"/><path d="M220 105 Q290 150 360 105" fill="none" stroke="#6c63ff" stroke-width="2.5"/><line x1="220" y1="100" x2="360" y2="100" stroke="#6c63ff" stroke-width="2.5"/><path d="M220 90 Q190 60 165 75" fill="none" stroke="#ff6b6b" stroke-width="2.5"/><path d="M220 110 Q190 140 165 125" fill="none" stroke="#ff6b6b" stroke-width="2.5"/><path d="M360 90 Q390 60 415 75" fill="none" stroke="#00d4aa" stroke-width="2.5"/><path d="M360 110 Q390 140 415 125" fill="none" stroke="#00d4aa" stroke-width="2.5"/><circle cx="290" cy="100" r="24" fill="#1e2240" stroke="#6c63ff" stroke-width="2"/><text x="290" y="100" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono,monospace" font-size="11" fill="#6c63ff" font-weight="600">I(5)</text><circle cx="148" cy="100" r="24" fill="#1e2240" stroke="#ff6b6b" stroke-width="2"/><text x="148" y="100" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono,monospace" font-size="11" fill="#ff6b6b" font-weight="600">N(3)</text><circle cx="432" cy="100" r="24" fill="#1e2240" stroke="#00d4aa" stroke-width="2"/><text x="432" y="100" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono,monospace" font-size="11" fill="#00d4aa" font-weight="600">S(3)</text><circle cx="290" cy="172" r="18" fill="#1e2240" stroke="#ffd166" stroke-width="2"/><text x="290" y="172" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono,monospace" font-size="11" fill="#ffd166" font-weight="600">E(3)</text><line x1="220" y1="110" x2="290" y2="154" stroke="#ffd166" stroke-width="2.5"/><line x1="360" y1="110" x2="290" y2="154" stroke="#ffd166" stroke-width="2.5"/><text x="350" y="192" text-anchor="middle" font-family="Source Sans 3,sans-serif" font-size="12" fill="#9ba3d4">Numbers = degrees. All 4 vertices have ODD degree → no Eulerian path or circuit possible</text></svg>
+
+<h3 class="sub">Euler's Insight — Why Degree is Everything</h3>
+<p class="prose">Every time you <strong>enter</strong> a vertex via some edge, you must <strong>exit</strong> via a different edge (except at start/end of journey). This means most vertices must have their edges "paired" — one in, one out — requiring <strong>even degree</strong>. Only the start and end vertices can have unpaired edges (odd degree). So exactly 0 vertices (circuit) or 2 vertices (path) may have odd degree.</p>
+
+<div class="thm-box"><span class="thm-label">Theorem — Eulerian Circuit (Euler, 1736)</span><p><strong>A connected graph G has an Eulerian circuit iff every vertex has even degree.</strong><br><br>In a circuit, you enter and exit every vertex equally — each visit uses 2 edges (one in, one out), so degree must be even. For digraphs: every vertex must have deg⁻(v) = deg⁺(v).</p></div>
+<div class="thm-box"><span class="thm-label">Theorem — Eulerian Path</span><p><strong>A connected graph G has an Eulerian path (not circuit) iff it has exactly 2 odd-degree vertices.</strong><br><br>The path has a distinct start and end. Start: you leave one more time than arrive → odd degree. End: you arrive one more time than leave → odd degree. All intermediate vertices: equal arrivals and departures → even degree. Path runs from one odd-degree vertex to the other.</p></div>
+
+<div class="warn-box"><span class="warn-label">Why 1 or 3 Odd-Degree Vertices is Impossible</span><p>By the Handshaking Lemma, Σdeg = 2|E| = even. Sum of even-degree vertices = even. So sum of odd-degree contributions = even. A sum of odd numbers is even only if there are an <strong>even count</strong> of them. So odd-degree vertices always number 0, 2, 4, 6, ... — never 1, 3, 5 etc.</p></div>
+
+<div class="tbl-wrap"><table><tr><th>Condition</th><th>Result</th><th>Start → End</th></tr><tr><td>All even degree + connected</td><td class="yes">Eulerian circuit exists</td><td>Any vertex → same vertex</td></tr><tr><td>Exactly 2 odd-degree + connected</td><td class="yes">Eulerian path (no circuit)</td><td>Odd → other odd vertex</td></tr><tr><td>4+ odd-degree vertices</td><td class="no">Neither exists</td><td>—</td></tr><tr><td>Graph disconnected</td><td class="no">Neither exists</td><td>—</td></tr></table></div>
+
+<h3 class="sub">Hierholzer's Algorithm — Finding the Eulerian Circuit</h3>
+<div class="step-list">
+<div class="step-item"><p><strong>Start at any vertex.</strong> Traverse unused edges until you return to start → this gives a sub-circuit.</p></div>
+<div class="step-item"><p><strong>Find any vertex on the sub-circuit with unused edges.</strong> Start a new sub-circuit from there.</p></div>
+<div class="step-item"><p><strong>Merge the new sub-circuit into the existing one</strong> at the shared vertex.</p></div>
+<div class="step-item"><p><strong>Repeat until all edges used.</strong> The merged result is the complete Eulerian circuit.</p></div>
+</div>
+
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q1: V={A,B,C,D,E}, E={(A,B),(A,D),(B,C),(B,D),(C,E),(D,E)}. Eulerian circuit or path?</span><span class="arrow">▼</span></div><div class="qa-a">Degrees: A=2, B=3, C=2, D=3, E=2. Odd-degree: B and D (exactly 2). Connected ✓. <code>Eulerian path from B to D</code> (or D to B). No circuit since B and D are odd.</div></div>
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q2: Graph has 8 vertices with degrees 2,2,4,4,2,2,3,3. Eulerian circuit?</span><span class="arrow">▼</span></div><div class="qa-a">Odd-degree vertices: the two degree-3 vertices → exactly 2 odd. <code>No Eulerian circuit</code> (needs all even). <code>Eulerian path exists</code> between the two degree-3 vertices (if connected).</div></div>
+</section>
+
+<!-- ═══════════════════════════ SECTION 6 ═══════════════════════════ -->
+<section class="section" id="hamilton">
+<div class="section-header"><div class="section-num">06</div><div><span class="section-tag" style="color:var(--amber)">Hamiltonian Paths & Circuits</span><h2>Visit every vertex exactly once</h2></div></div>
+
+<p class="prose">Hamiltonian paths look similar to Eulerian on the surface — both traverse a graph in one go. But the target is completely different, and the difficulty is incomparably harder.</p>
+
+<div class="def-box"><span class="def-label">Definition — Hamiltonian Path</span><p>A path that visits every <strong>vertex</strong> of the graph exactly once. You don't need to use every edge — just every vertex, once each.</p></div>
+<div class="def-box"><span class="def-label">Definition — Hamiltonian Circuit</span><p>A Hamiltonian path that also returns to the starting vertex — visiting every vertex exactly once and completing a cycle. Also called <strong>Hamiltonian cycle</strong>.</p></div>
+
+<div class="card amber"><h3>Eulerian vs Hamiltonian — Critical Comparison</h3>
+<div class="tbl-wrap"><table><tr><th>Property</th><th>Eulerian</th><th>Hamiltonian</th></tr><tr><td>Must cover</td><td>Every edge once</td><td>Every vertex once</td></tr><tr><td>Simple existence test?</td><td class="yes">Yes — degree rule</td><td class="no">No — NP-complete</td></tr><tr><td>Complexity</td><td class="yes">O(V+E)</td><td class="no">Exponential in general</td></tr><tr><td>Key theorem</td><td>Euler 1736 (exact)</td><td>Dirac/Ore (sufficient only)</td></tr><tr><td>Famous link</td><td>Graph theory birth</td><td>P vs NP problem</td></tr></table></div></div>
+
+<div class="interactive"><div class="int-title">Hamiltonian Circuit Visualiser</div>
+<div class="btn-row"><button class="ibtn active" onclick="hamShow('k5',this)">K₅ — exists</button><button class="ibtn" onclick="hamShow('path',this)">Circuit exists</button><button class="ibtn" onclick="hamShow('none',this)">Impossible</button></div>
+<svg viewBox="0 0 700 230" id="ham-svg" style="background:var(--bg);border-radius:8px;width:100%;"><g id="ham-edges"></g><g id="ham-verts"></g></svg>
+<div class="iinfo" id="ham-info"></div></div>
+
+<h3 class="sub">Sufficient Conditions — When Existence is Guaranteed</h3>
+<p class="prose">Since no simple necessary-and-sufficient condition is known, we use <strong>sufficient conditions</strong> — they guarantee existence when satisfied, but failure doesn't mean non-existence.</p>
+
+<div class="thm-box"><span class="thm-label">Theorem — Dirac's Theorem (1952)</span><p><strong>If G has n ≥ 3 vertices and every vertex has degree ≥ n/2, then G has a Hamiltonian circuit.</strong><br><br><strong>Intuition:</strong> If every vertex is connected to at least half the others, the graph is dense enough that you can always find a way to visit all vertices in a cycle. With fewer connections you might get stuck with no unvisited vertex reachable.<br><br><strong>Example:</strong> n=6 → need degree ≥ 3. Every vertex degree ≥ 3 → Hamiltonian circuit guaranteed.</p></div>
+<div class="thm-box"><span class="thm-label">Theorem — Ore's Theorem (1960)</span><p><strong>If G has n ≥ 3 vertices and for every pair of non-adjacent vertices u,v: deg(u)+deg(v) ≥ n, then G has a Hamiltonian circuit.</strong><br><br>Dirac is a special case of Ore — if every vertex has degree ≥ n/2, then any non-adjacent pair satisfies deg(u)+deg(v) ≥ n/2+n/2=n. Ore's theorem is slightly more general — it only requires the condition for non-adjacent pairs.</p></div>
+
+<h3 class="sub">Necessary Conditions for NON-Existence</h3>
+<p class="prose"><strong>Condition 1:</strong> Any vertex with degree 1 makes Hamiltonian circuit impossible — you need to both enter and exit, requiring ≥ 2 edges.</p>
+<p class="prose"><strong>Condition 2 (Cut test):</strong> If removing k vertices creates more than k+1 components, no Hamiltonian circuit exists. In a Hamiltonian circuit, removing k vertices splits it into at most k pieces (at most k+1 if split at endpoints). More than k+1 components means the circuit cannot exist.</p>
+<p class="prose"><strong>Condition 3:</strong> Every vertex uses exactly 2 of its edges in a Hamiltonian circuit. If a vertex has degree 2, both its edges MUST be in the circuit — this forces local structure and can create contradictions.</p>
+
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q1: G has n=8 vertices, every vertex has degree 5. Does a Hamiltonian circuit exist?</span><span class="arrow">▼</span></div><div class="qa-a">n/2 = 4. Every vertex has degree 5 ≥ 4. Dirac's theorem applies → <code>Hamiltonian circuit guaranteed to exist</code>. No need to find it — the theorem guarantees existence.</div></div>
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q2: Removing vertex X creates 4 components. Can G have a Hamiltonian circuit?</span><span class="arrow">▼</span></div><div class="qa-a">Removed k=1 vertex, got 4 components. For Hamiltonian circuit: removing k vertices creates at most k+1=2 components. But 4 > 2. <code>No Hamiltonian circuit exists.</code></div></div>
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q3: Why is Hamiltonian circuit detection harder than Eulerian?</span><span class="arrow">▼</span></div><div class="qa-a">Eulerian detection requires only checking vertex degrees — O(V). Hamiltonian detection is NP-complete — no polynomial algorithm is known for general graphs. Best algorithms are exponential worst case. Connected to P vs NP — an efficient Hamiltonian algorithm would prove P=NP, solving one of the greatest open problems in computer science.</div></div>
+</section>
+
+<!-- ═══════════════════════════ SECTION 7 ═══════════════════════════ -->
+<section class="section" id="bipartite">
+<div class="section-header"><div class="section-num">07</div><div><span class="section-tag" style="color:var(--teal)">Bipartite Graphs</span><h2>Two teams — all edges between teams</h2></div></div>
+
+<p class="prose">Bipartite graphs model two-sided relationships: students and courses, workers and jobs, users and products. In all these cases the two "sides" of the relationship form a natural bipartition — connections exist between sides, never within a side.</p>
+
+<div class="def-box"><span class="def-label">Definition — Bipartite Graph</span><p>G=(V,E) is <strong>bipartite</strong> if V can be partitioned into two <strong>disjoint non-empty sets X and Y</strong> (the <strong>bipartition</strong>) such that every edge has one endpoint in X and one in Y. No edge connects two vertices within X, and none within Y.</p></div>
+<div class="def-box"><span class="def-label">Definition — Complete Bipartite K(m,n)</span><p><strong>K(m,n)</strong> has |X|=m, |Y|=n, and every vertex in X connects to every vertex in Y. Total edges = <strong>m×n</strong>. deg(X vertices)=n, deg(Y vertices)=m.</p></div>
+<div class="def-box"><span class="def-label">Definition — Star K(1,n)</span><p><strong>K(1,n)</strong> has 1 centre vertex connected to n leaf vertices. All trees are bipartite — stars are the simplest case.</p></div>
+
+<div class="interactive"><div class="int-title">Bipartite Graph Explorer</div>
+<div class="btn-row"><button class="ibtn active" onclick="bipShow('k23',this)">K(2,3)</button><button class="ibtn" onclick="bipShow('k33',this)">K(3,3)</button><button class="ibtn" onclick="bipShow('star',this)">Star K(1,4)</button><button class="ibtn" onclick="bipShow('odd',this)">NOT bipartite (C₃)</button></div>
+<svg viewBox="0 0 700 220" id="bip-svg" style="background:var(--bg);border-radius:8px;width:100%;"><g id="bip-edges"></g><g id="bip-verts"></g></svg>
+<div class="iinfo" id="bip-info"></div></div>
+
+<div class="thm-box"><span class="thm-label">Fundamental Theorem — Bipartite ↔ No Odd Cycles</span><p><strong>A graph G is bipartite if and only if it contains no odd-length cycle.</strong><br><br><strong>Forward (bipartite → no odd cycles):</strong> Every edge alternates X→Y→X→Y... Completing a cycle requires returning to the starting side — must take an even number of steps. Odd cycles impossible.<br><br><strong>Backward (no odd cycles → bipartite):</strong> Do BFS from any vertex. Colour vertices at even BFS distance Purple (set X), odd distance Teal (set Y). Since no odd cycles exist, no edge connects two vertices of the same colour. Valid bipartition found.<br><br><strong>Connection to colouring:</strong> Bipartite → χ(G)=2. Odd cycle → χ≥3. This is exactly the same condition.</p></div>
+
+<h3 class="sub">BFS 2-Colouring Algorithm — Detecting Bipartiteness</h3>
+<div class="step-list">
+<div class="step-item"><p><strong>Pick any vertex, colour it Purple.</strong> Add to queue.</p></div>
+<div class="step-item"><p><strong>For each vertex dequeued:</strong> assign opposite colour to each uncoloured neighbour. Add them to queue.</p></div>
+<div class="step-item"><p><strong>Conflict check:</strong> If any neighbour already has the same colour as current → <strong>NOT bipartite</strong> (odd cycle found).</p></div>
+<div class="step-item"><p><strong>BFS completes without conflict</strong> → bipartite. Purple = set X, Teal = set Y.</p></div>
+</div>
+
+<div class="tbl-wrap"><table><tr><th>Property</th><th>Bipartite Graph</th><th>Why</th></tr><tr><td>χ(G)</td><td class="hi">≤ 2 (= 2 if any edge)</td><td>Two parts = two colour classes</td></tr><tr><td>Odd cycles</td><td class="no">None — impossible</td><td>Fundamental theorem</td></tr><tr><td>Contains K₃?</td><td class="no">Never</td><td>K₃ is an odd cycle</td></tr><tr><td>Every tree</td><td class="yes">Is bipartite</td><td>No cycles → no odd cycles</td></tr><tr><td>Edges in K(m,n)</td><td class="hi">m × n</td><td>Complete cross-connection</td></tr></table></div>
+
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q1: Is C₈ bipartite? What about C₇?</span><span class="arrow">▼</span></div><div class="qa-a">C₈ is even (8 edges) → <code>bipartite</code>. No odd cycles. Bipartition: {1,3,5,7} and {2,4,6,8}.<br>C₇ is odd (7 edges) → <code>NOT bipartite</code>. It IS itself an odd cycle.</div></div>
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q2: Prove every tree is bipartite.</span><span class="arrow">▼</span></div><div class="qa-a"><strong>Proof:</strong> A tree is acyclic — it has no cycles at all, hence no odd cycles. By the fundamental theorem (bipartite ↔ no odd cycles), every tree is bipartite. ✓ The bipartition is found by BFS from root, colouring alternately level by level — no cycles means no conflict ever arises.</div></div>
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q3: K(3,3) — how many edges? Why is it famous?</span><span class="arrow">▼</span></div><div class="qa-a">3×3 = <code>9 edges</code>. Famous because K(3,3) is one of the two forbidden minors in Kuratowski's theorem — it is <strong>non-planar</strong> (cannot be drawn without crossing). It represents the unsolvable "3 houses 3 utilities" puzzle.</div></div>
+</section>
+
+<!-- ═══════════════════════════ SECTION 8 ═══════════════════════════ -->
+<section class="section" id="digraph">
+<div class="section-header"><div class="section-num">08</div><div><span class="section-tag" style="color:var(--coral)">Digraphs (Directed Graphs)</span><h2>Direction changes everything</h2></div></div>
+
+<p class="prose">In all previous topics, edges were undirected — connecting u and v means travel both ways. In a <strong>digraph</strong>, each edge has a direction. One-way streets, social media follows, course prerequisites — all naturally modelled as directed edges.</p>
+
+<div class="def-box"><span class="def-label">Definition — Digraph</span><p>G=(V,E) where E consists of <strong>directed edges (arcs)</strong>. Each arc is an ordered pair (u,v) — goes FROM u TO v. Arc (u,v) and arc (v,u) are <strong>different edges</strong> — unlike undirected graphs.</p></div>
+<div class="def-box"><span class="def-label">Definition — In-degree and Out-degree</span><p><strong>deg⁻(v)</strong> = number of arcs pointing INTO v. <strong>deg⁺(v)</strong> = number of arcs going OUT from v. Vertex with deg⁺=0 is a <strong>sink</strong>. Vertex with deg⁻=0 is a <strong>source</strong>.</p></div>
+
+<div class="thm-box"><span class="thm-label">Theorem — Handshaking for Digraphs</span><p><strong>Σ deg⁻(v) = Σ deg⁺(v) = |E|.</strong><br><br>Every arc (u,v) contributes 1 to out-degree of u and 1 to in-degree of v. Both sums count every arc once. Both equal |E|.</p></div>
+
+<div class="interactive"><div class="int-title">Strong vs Weak Connectivity and SCCs</div>
+<div class="btn-row"><button class="ibtn active" onclick="digShow('strong',this)">Strongly connected</button><button class="ibtn" onclick="digShow('weak',this)">Weakly connected</button><button class="ibtn" onclick="digShow('scc',this)">Multiple SCCs</button></div>
+<svg viewBox="0 0 700 220" id="dig-svg" style="background:var(--bg);border-radius:8px;width:100%;"><defs><marker id="da" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round"/></marker></defs><g id="dig-edges"></g><g id="dig-verts"></g></svg>
+<div class="iinfo" id="dig-info"></div></div>
+
+<div class="def-box"><span class="def-label">Definition — Strongly Connected</span><p>A digraph is <strong>strongly connected</strong> if for every ordered pair (u,v), a <strong>directed path from u to v AND from v to u</strong> exists. You can reach any vertex from any other following arrow directions.</p></div>
+<div class="def-box"><span class="def-label">Definition — Weakly Connected</span><p>A digraph is <strong>weakly connected</strong> if the underlying undirected graph (ignoring directions) is connected. But following arrows you might not get from every vertex to every other.</p></div>
+<div class="def-box"><span class="def-label">Definition — Strongly Connected Component (SCC)</span><p>A <strong>maximal subgraph that is strongly connected</strong>. Every digraph decomposes uniquely into its SCCs. Collapsing each SCC to one node gives a DAG.</p></div>
+
+<h3 class="sub">Adjacency Matrix and Its Powers</h3>
+<p class="prose">For a digraph with n vertices, the <strong>adjacency matrix A</strong> is n×n where A[i][j]=1 if arc (i,j) exists. Row sum = out-degree; column sum = in-degree. Matrix is <strong>not necessarily symmetric</strong>.</p>
+<p class="prose"><strong>Aᵏ[i][j]</strong> = number of directed walks of length exactly k from vertex i to vertex j, computed by matrix multiplication. Very commonly asked in exams.</p>
+
+<div class="thm-box"><span class="thm-label">Eulerian Conditions for Digraphs</span><p><strong>Circuit:</strong> Every vertex v must have deg⁻(v) = deg⁺(v).<br><strong>Path:</strong> Exactly one vertex with deg⁺−deg⁻=1 (start), one with deg⁻−deg⁺=1 (end), all others balanced.</p></div>
+
+<div class="tbl-wrap"><table><tr><th>Property</th><th>Undirected</th><th>Digraph</th></tr><tr><td>Edge (u,v)</td><td>Same as (v,u)</td><td>Different from (v,u)</td></tr><tr><td>Degree</td><td>One value</td><td>In-degree AND Out-degree</td></tr><tr><td>Connectivity</td><td>Connected / Not</td><td>Strongly / Weakly / Not</td></tr><tr><td>Adjacency matrix</td><td>Always symmetric</td><td>Not necessarily symmetric</td></tr><tr><td>Eulerian circuit</td><td>All even degrees</td><td>deg⁻(v)=deg⁺(v) ∀v</td></tr><tr><td>Handshaking</td><td>Σdeg=2|E|</td><td>Σdeg⁻=Σdeg⁺=|E|</td></tr></table></div>
+
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q1: Arcs: (1,2),(2,3),(3,1),(1,4),(4,2). Eulerian circuit or path?</span><span class="arrow">▼</span></div><div class="qa-a">Out: 1→2, 2→1, 3→1, 4→1. In: 1→1, 2→2, 3→1, 4→1. Vertex 1: out=2,in=1 ≠. Vertex 2: out=1,in=2 ≠. <code>No Eulerian circuit</code>. Vertex 1 has out−in=1 (start), vertex 2 has in−out=1 (end). Others balanced → <code>Eulerian path from 1 to 2</code>.</div></div>
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q2: What does A³[i][j] mean in an adjacency matrix?</span><span class="arrow">▼</span></div><div class="qa-a"><code>A³[i][j]</code> = number of directed walks of <strong>length exactly 3</strong> from vertex i to vertex j. Computed as A×A×A by standard matrix multiplication. Aᵏ[i][j] generalises this to walks of length k.</div></div>
+</section>
+
+<!-- ═══════════════════════════ SECTION 9 ═══════════════════════════ -->
+<section class="section" id="multi">
+<div class="section-header"><div class="section-num">09</div><div><span class="section-tag" style="color:var(--purple)">Multigraphs & Pseudographs</span><h2>Beyond simple graphs</h2></div></div>
+
+<p class="prose">All previous topics assumed a <strong>simple graph</strong> — at most one edge between any pair, no self-loops. Real situations often violate this: multiple flight routes between two cities, or a process with a feedback loop to itself. These require multigraphs and pseudographs.</p>
+
+<div class="def-box"><span class="def-label">Definition — Simple Graph</span><p>At most one edge between any pair of vertices and no self-loops. Standard assumption throughout Topics 1–8.</p></div>
+<div class="def-box"><span class="def-label">Definition — Multigraph</span><p>Allows <strong>multiple parallel edges</strong> between the same pair of vertices. No self-loops. The number of edges between u and v is the <strong>multiplicity</strong> of that edge. Königsberg bridge problem is a multigraph.</p></div>
+<div class="def-box"><span class="def-label">Definition — Pseudograph</span><p>Allows <strong>parallel edges AND self-loops</strong>. A <strong>self-loop</strong> is edge (v,v) — starts and ends at same vertex. Contributes <strong>2</strong> to deg(v) (one for each endpoint, both are v).</p></div>
+
+<div class="interactive"><div class="int-title">Simple vs Multigraph vs Pseudograph</div>
+<div class="btn-row"><button class="ibtn active" onclick="multiShow('simple',this)">Simple graph</button><button class="ibtn" onclick="multiShow('multi',this)">Multigraph</button><button class="ibtn" onclick="multiShow('pseudo',this)">Pseudograph</button></div>
+<svg viewBox="0 0 700 200" id="multi-svg" style="background:var(--bg);border-radius:8px;width:100%;"><g id="multi-content"></g></svg>
+<div class="iinfo" id="multi-info"></div></div>
+
+<h3 class="sub">How Previous Theorems Extend</h3>
+<p class="prose"><strong>Handshaking Lemma:</strong> Still holds. Σdeg(v)=2|E| where |E| counts each parallel edge separately and each self-loop contributes 2 to degree.</p>
+<p class="prose"><strong>Eulerian circuits:</strong> Same degree conditions apply. Connected multigraph has Eulerian circuit iff all degrees even.</p>
+<p class="prose"><strong>Graph colouring:</strong> Parallel edges don't change colouring — adjacent vertices still just need different colours. But a <strong>self-loop makes proper colouring impossible</strong> — vertex would need a colour different from itself.</p>
+<p class="prose"><strong>Graph isomorphism:</strong> Bijection must also preserve edge multiplicities — if u-v has multiplicity 3 in G₁, then f(u)-f(v) must also have multiplicity 3 in G₂.</p>
+
+<div class="tbl-wrap"><table><tr><th>Type</th><th>Self-loops</th><th>Parallel edges</th><th>Direction</th><th>Example</th></tr><tr><td>Simple graph</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td>Friendship network</td></tr><tr><td>Multigraph</td><td class="no">No</td><td class="yes">Yes</td><td class="no">No</td><td>Multiple bus routes</td></tr><tr><td>Pseudograph</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="no">No</td><td>Network with feedback</td></tr><tr><td>Digraph</td><td class="no">No</td><td class="no">No</td><td class="yes">Yes</td><td>Twitter follows</td></tr><tr><td>Directed multigraph</td><td class="no">No</td><td class="yes">Yes</td><td class="yes">Yes</td><td>Multiple flight routes</td></tr></table></div>
+
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q1: Multigraph: A-B(×3), B-C(×2), A-C(×1). Find degrees and verify handshaking.</span><span class="arrow">▼</span></div><div class="qa-a">deg(A)=3+1=4, deg(B)=3+2=5, deg(C)=2+1=3. Σdeg=12. |E|=3+2+1=6. 2×6=12. <code>12=12 ✓</code></div></div>
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q2: Why does a self-loop contribute 2 to degree, not 1?</span><span class="arrow">▼</span></div><div class="qa-a">An edge contributes 1 to each of its two endpoints. A self-loop (v,v) has both endpoints = v. So it contributes 1+1=2 to deg(v). This ensures Handshaking Lemma Σdeg=2|E| still holds — each edge (including self-loops) contributes exactly 2 to the total.</div></div>
+</section>
+
+<!-- ═══════════════════════════ SECTION 10 ═══════════════════════════ -->
+<section class="section" id="handshake">
+<div class="section-header"><div class="section-num">10</div><div><span class="section-tag" style="color:var(--teal)">Handshaking Lemma</span><h2>The most fundamental identity in graph theory</h2></div></div>
+
+<p class="prose">The Handshaking Lemma gets its name from a social analogy: if n people shake hands at a party, the total recorded per person equals twice the actual handshakes — each handshake counted once by each participant. In graph terms, each edge is counted once by each of its two endpoints.</p>
+
+<div class="def-box"><span class="def-label">The Handshaking Lemma</span><p>For any undirected graph G=(V,E): <strong>Σᵥ∈V deg(v) = 2|E|</strong>. The sum of degrees of all vertices equals twice the number of edges.</p></div>
+<div class="formula">Σ deg(v) = 2|E|</div>
+
+<h3 class="sub">Proof</h3>
+<p class="prose">Consider any edge e = {u,v}. When computing deg(u), edge e contributes 1. When computing deg(v), edge e contributes 1 again. So each edge contributes exactly <strong>2</strong> to the total sum Σdeg(v). Since there are |E| edges, total = 2|E|. This holds for every graph, regardless of structure. ✓</p>
+
+<div class="interactive"><div class="int-title">Live Degree Counter — Handshaking in Real Time</div>
+<svg viewBox="0 0 700 240" id="hs-svg" style="background:var(--bg);border-radius:8px;width:100%;"></svg>
+<div class="iinfo" id="hs-info">Click any vertex to toggle its edges and watch Σdeg = 2|E| update in real time.</div></div>
+
+<div class="thm-box"><span class="thm-label">Corollary — Number of Odd-Degree Vertices is Always Even</span><p><strong>In any graph, the number of vertices with odd degree is always even (0, 2, 4, 6, ...).</strong><br><br><strong>Proof:</strong> Let V_odd = set of odd-degree vertices, V_even = set of even-degree vertices.<br>Σdeg = 2|E| = even (total).<br>Σ_{V_even} deg = sum of evens = even.<br>∴ Σ_{V_odd} deg = even − even = even.<br>Each term in Σ_{V_odd} deg is odd. Sum of k odd numbers is even iff k is even.<br>∴ |V_odd| is even. ✓<br><br><strong>Consequence:</strong> A graph can have 0, 2, 4, 6, ... odd-degree vertices — never 1, 3, 5 etc. This is why Eulerian conditions only consider 0 or 2 odd-degree vertices — those are the only even possibilities ≤ 2.</p></div>
+
+<h3 class="sub">Common Uses in Exams</h3>
+<p class="prose"><strong>Find unknown degree:</strong> Given all degrees but one, use Σdeg=2|E| (the sum must be even, so find the missing value and its parity).</p>
+<p class="prose"><strong>Find edge count:</strong> Given all degrees, sum them and divide by 2 to get |E|.</p>
+<p class="prose"><strong>Find vertex count:</strong> In a d-regular graph (all vertices degree d), n = 2|E| / d.</p>
+<p class="prose"><strong>Prove impossibility:</strong> If a proposed graph requires an odd number of odd-degree vertices, it cannot exist.</p>
+
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q1: Degrees 1,2,3,4,2,3,d. Find d and |E|.</span><span class="arrow">▼</span></div><div class="qa-a">Sum = 15+d must be even → d is odd. Minimum d=1. With d=1: Σdeg=16, so <code>|E|=8</code>. d can be any odd value ≥ 1 within constraints.</div></div>
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q2: Can a graph have exactly 5 odd-degree vertices? Prove.</span><span class="arrow">▼</span></div><div class="qa-a">No. By the corollary, count of odd-degree vertices must be even. 5 is odd → <strong>impossible</strong>. Proof: Σdeg=2|E|=even. Σ_{even-deg}=even. Σ_{odd-deg}=even−even=even. Sum of k odd numbers = even iff k is even. ∴ k must be even. 5 is not even. ✓</div></div>
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q3: 4-regular graph with 10 edges. How many vertices?</span><span class="arrow">▼</span></div><div class="qa-a">Σdeg = 2×10 = 20. Each vertex contributes 4. Number of vertices = 20÷4 = <code>5</code>. Verify: 5×4=20=2×10 ✓</div></div>
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q4: Full proof — number of odd-degree vertices is even.</span><span class="arrow">▼</span></div><div class="qa-a"><strong>Let</strong> G=(V,E). Partition V into V_even and V_odd.<br><strong>By Handshaking:</strong> Σ_{v∈V} deg(v) = 2|E| → even.<br><strong>Σ_{V_even} deg(v)</strong> = sum of even numbers = even.<br><strong>Therefore:</strong> Σ_{V_odd} deg(v) = 2|E| − Σ_{V_even} deg(v) = even − even = even.<br><strong>Each term</strong> in Σ_{V_odd} deg(v) is odd. Sum of an odd number of odd terms is odd; sum of an even number is even. Since sum = even → number of terms = |V_odd| is even. ✓</div></div>
+</section>
+
+<!-- ═══════════════════════════ SECTION 11 ═══════════════════════════ -->
+<section class="section" id="dijkstra">
+<div class="section-header"><div class="section-num">11</div><div><span class="section-tag" style="color:var(--coral)">Dijkstra's Algorithm</span><h2>Shortest path in a weighted graph</h2></div></div>
+
+<p class="prose">Published by Edsger W. Dijkstra in 1959, this algorithm solves the <strong>single-source shortest path problem</strong>: given a weighted graph and source vertex, find the shortest (minimum total weight) path to every other vertex. It powers GPS navigation, network routing protocols, and game AI pathfinding.</p>
+
+<div class="def-box"><span class="def-label">Problem Statement</span><p>Given weighted graph G=(V,E,w) with w(e)≥0 for all edges, and source vertex s∈V — find the minimum-weight path from s to every v∈V.</p></div>
+
+<div class="warn-box"><span class="warn-label">Critical Constraint — Non-Negative Weights Only</span><p>Dijkstra requires all edge weights ≥ 0. With negative weights it gives wrong answers. Use <strong>Bellman-Ford</strong> for graphs with negative weights — it is slower but correct, and can detect negative cycles.</p></div>
+
+<h3 class="sub">The Core Idea — Greedy Expansion</h3>
+<p class="prose">Dijkstra is a <strong>greedy algorithm</strong>. At each step, it picks the unvisited vertex with the currently smallest known distance from source, "locks in" that distance as final, then updates distances of its neighbours. This works because all weights are non-negative: once a vertex u is selected as minimum among unvisited, no future path through another unvisited vertex (with distance ≥ dist(u)) plus non-negative edge weight can give a shorter path to u.</p>
+
+<div class="card coral"><h3>Algorithm Steps — Detailed</h3>
+<div class="step-list">
+<div class="step-item"><p><strong>Initialise:</strong> dist(source)=0, dist(v)=∞ for all others. Mark all unvisited.</p></div>
+<div class="step-item"><p><strong>Select current:</strong> Pick unvisited vertex u with minimum dist(u). First iteration picks source.</p></div>
+<div class="step-item"><p><strong>Relax neighbours:</strong> For each unvisited neighbour v: compute candidate = dist(u)+w(u,v). If candidate &lt; dist(v) → update dist(v)=candidate, record prev(v)=u.</p></div>
+<div class="step-item"><p><strong>Mark u visited.</strong> Its distance is now final — never updated again.</p></div>
+<div class="step-item"><p><strong>Repeat steps 2–4</strong> until all vertices visited or all remaining have dist=∞ (unreachable).</p></div>
+</div>
+<div class="formula" style="margin-top:1rem;">Time: O(V²) with array &nbsp;|&nbsp; O((V+E) log V) with priority queue</div>
+</div>
+
+<div class="interactive"><div class="int-title">Dijkstra Step-by-Step — Graph: S-A(4), S-B(2), A-B(1), A-C(5), B-C(3), B-D(6), C-D(2), C-T(4), D-T(3)</div>
+<div class="btn-row"><button class="ibtn" id="dj-prev" onclick="djStep(-1)" disabled>← Prev</button><span id="dj-label" style="font-size:.8rem;color:var(--text2);font-family:JetBrains Mono,monospace;"></span><button class="ibtn" id="dj-next" onclick="djStep(1)">Next →</button><button class="ibtn" onclick="djReset()" style="margin-left:auto;">↺ Reset</button></div>
+<svg viewBox="0 0 700 200" id="dj-svg" style="background:var(--bg);border-radius:8px;width:100%;"><defs><marker id="dja" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round"/></marker></defs><g id="dj-edges"></g><g id="dj-verts"></g></svg>
+<div class="iinfo" id="dj-info"></div><div id="dj-table" style="margin-top:.8rem;overflow-x:auto;"></div></div>
+
+<h3 class="sub">Path Reconstruction</h3>
+<p class="prose">After algorithm completes, trace the "prev" (Via) column backwards: To find path S→T: T←C←B←S. So path = <strong>S→B→C→T</strong>, cost = 2+3+4 = 9.</p>
+
+<div class="tbl-wrap"><table><tr><th>Aspect</th><th>Dijkstra</th><th>Critical Path</th></tr><tr><td>Goal</td><td>Shortest (minimum) path</td><td>Longest (maximum) path</td></tr><tr><td>Graph type</td><td>Any weighted graph</td><td>DAG only</td></tr><tr><td>Strategy</td><td>Greedy — pick minimum</td><td>Forward+backward pass</td></tr><tr><td>Negative weights</td><td class="no">Not allowed</td><td class="no">N/A</td></tr><tr><td>Complexity</td><td class="hi">O(V²)</td><td class="hi">O(V+E)</td></tr></table></div>
+
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q1: Shortest path A to D: A-B(1), A-C(4), B-C(2), B-D(6), C-D(3).</span><span class="arrow">▼</span></div><div class="qa-a">Init: A=0,B=∞,C=∞,D=∞.<br>Process A: B=1, C=4.<br>Process B(1): C=min(4,1+2)=3, D=1+6=7.<br>Process C(3): D=min(7,3+3)=6.<br>Process D(6): done.<br>Shortest A→D = <code>6</code> via A→B→C→D (1+2+3).</div></div>
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q2: Why does Dijkstra fail on negative weights?</span><span class="arrow">▼</span></div><div class="qa-a">Dijkstra finalizes a vertex's distance when first selected. With negative edges, a later path might be shorter. Example: S→A(3), S→B(4), B→A(−2). Dijkstra finalizes A=3. But path S→B→A=4+(−2)=2 is shorter! Dijkstra already finalized A=3 and won't reconsider. → Wrong answer. Bellman-Ford handles this with V−1 full passes allowing updates even after processing.</div></div>
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q3: After Dijkstra, vertex X shows ∞. What does this mean?</span><span class="arrow">▼</span></div><div class="qa-a">Vertex X is <strong>unreachable</strong> from source S — no path exists. In undirected graph: X is in a different connected component. In digraph: no directed path from S to X exists (even if X→S path exists).</div></div>
+<div class="qa-block"><div class="qa-q" onclick="toggleQA(this)"><span>Q4: Prove that once Dijkstra visits a vertex, its distance is final.</span><span class="arrow">▼</span></div><div class="qa-a"><strong>Proof by contradiction:</strong> Suppose vertex u is selected with dist(u)=d, and a shorter path exists with cost d'&lt;d. That path must pass through some unvisited vertex w. But dist(w)≥d (since u was minimum among unvisited). Path from w to u adds ≥0 (non-negative weights). So d'≥dist(w)≥d. Contradiction with d'&lt;d. ∴ dist(u) is final when selected. ✓</div></div>
+</section>
+
+<!-- ═══════════════════════════ SUMMARY ═══════════════════════════ -->
+<section class="section" id="summary" style="border-bottom:none;">
+<div class="section-header"><div class="section-num" style="color:var(--accent)">∑</div><div><span class="section-tag" style="color:var(--accent)">Complete Reference</span><h2>Full syllabus at a glance</h2></div></div>
+<div class="summary-grid">
+  <div class="summary-card"><div class="num" style="color:var(--purple)">01</div><h4>Isomorphism</h4><p>Bijection preserving adjacency. Check degree sequence first — fastest disproof. Then construct and verify.</p><span class="tag" style="background:rgba(108,99,255,.15);color:var(--purple)">G₁≅G₂ iff bijection exists</span></div>
+  <div class="summary-card"><div class="num" style="color:var(--teal)">02</div><h4>Paths & Cycles</h4><p>Walk→Trail→Path. Circuit=closed trail. Cycle=closed path. Cycle⊂Circuit⊂Trail⊂Walk.</p><span class="tag" style="background:rgba(0,212,170,.15);color:var(--teal)">Length = number of edges</span></div>
+  <div class="summary-card"><div class="num" style="color:var(--coral)">03</div><h4>Graph Colouring</h4><p>χ(G)=min colours. Odd cycles→χ≥3. Brook: χ≤Δ. Four Colour: planar→χ≤4. Bipartite→χ≤2.</p><span class="tag" style="background:rgba(255,107,107,.15);color:var(--coral)">χ(G) ≤ Δ(G)+1 always</span></div>
+  <div class="summary-card"><div class="num" style="color:var(--amber)">04</div><h4>Critical Path</h4><p>Longest DAG path = min project time. EST=forward pass(max), LST=backward(min). Float=LST−EST=0 means critical.</p><span class="tag" style="background:rgba(255,209,102,.15);color:var(--amber)">Delay=max(0,k−float)</span></div>
+  <div class="summary-card"><div class="num" style="color:var(--purple)">05</div><h4>Eulerian</h4><p>Every edge once. All even→circuit. Exactly 2 odd→path. Königsberg proved impossible (4 odd vertices).</p><span class="tag" style="background:rgba(108,99,255,.15);color:var(--purple)">Degree rule is exact</span></div>
+  <div class="summary-card"><div class="num" style="color:var(--amber)">06</div><h4>Hamiltonian</h4><p>Every vertex once. No simple condition. Dirac: deg≥n/2 sufficient. NP-complete generally.</p><span class="tag" style="background:rgba(255,209,102,.15);color:var(--amber)">Linked to P vs NP</span></div>
+  <div class="summary-card"><div class="num" style="color:var(--teal)">07</div><h4>Bipartite</h4><p>Two sets, all edges between. Bipartite ↔ no odd cycles. χ=2. Every tree is bipartite. K(m,n) has m×n edges.</p><span class="tag" style="background:rgba(0,212,170,.15);color:var(--teal)">BFS 2-colouring test</span></div>
+  <div class="summary-card"><div class="num" style="color:var(--coral)">08</div><h4>Digraphs</h4><p>Directed edges. In/out degrees separate. Strong vs weak. Σdeg⁻=Σdeg⁺=|E|. Aᵏ[i][j]=walks of length k.</p><span class="tag" style="background:rgba(255,107,107,.15);color:var(--coral)">Eulerian: in-deg=out-deg</span></div>
+  <div class="summary-card"><div class="num" style="color:var(--purple)">09</div><h4>Multigraphs</h4><p>Parallel edges OK. Self-loop adds 2 to degree. Handshaking holds. Proper colouring impossible with self-loops.</p><span class="tag" style="background:rgba(108,99,255,.15);color:var(--purple)">Σdeg=2|E| still holds</span></div>
+  <div class="summary-card"><div class="num" style="color:var(--teal)">10</div><h4>Handshaking Lemma</h4><p>Σdeg=2|E|. Odd-degree vertices always even in count. Foundation for all Eulerian theory.</p><span class="tag" style="background:rgba(0,212,170,.15);color:var(--teal)">Σ deg(v) = 2|E|</span></div>
+  <div class="summary-card"><div class="num" style="color:var(--coral)">11</div><h4>Dijkstra</h4><p>Shortest path, non-negative weights, greedy. O(V²). Finalizes minimum each step. Fails on negative weights.</p><span class="tag" style="background:rgba(255,107,107,.15);color:var(--coral)">O(V²) with array</span></div>
+</div>
+<p style="text-align:center;color:var(--text3);font-family:JetBrains Mono,monospace;font-size:.75rem;margin-top:3rem;letter-spacing:.1em;">Kenneth H. Rosen — Discrete Mathematics and Its Applications · TMH</p>
+</section>
+
+<script>
+const NS='http://www.w3.org/2000/svg';
+function svgEl(tag,attrs,parent){const e=document.createElementNS(NS,tag);for(const[k,v]of Object.entries(attrs))e.setAttribute(k,String(v));if(parent)parent.appendChild(e);return e;}
+function vnode(parent,x,y,label,fill,stroke,sub){
+  const g=svgEl('g',{},parent);
+  svgEl('circle',{cx:x,cy:y,r:22,fill:fill||'#1e2240',stroke:stroke||'#2a2f55','stroke-width':2},g);
+  const t=svgEl('text',{x,y,fill:(fill&&fill!='#1e2240')?'#fff':'#e8eaf6','text-anchor':'middle','dominant-baseline':'central','font-family':'JetBrains Mono,monospace','font-size':12,'font-weight':600},g);
+  t.textContent=label;
+  if(sub!==undefined){const s=svgEl('text',{x,y:+y+34,fill:'#5c6494','text-anchor':'middle','font-size':10,'font-family':'JetBrains Mono,monospace'},g);s.textContent=String(sub);}
+  return g;
+}
+function ledge(p,x1,y1,x2,y2,c,w){return svgEl('line',{x1,y1,x2,y2,stroke:c||'#2a2f55','stroke-width':w||1.5},p);}
+function pedge(p,x1,y1,x2,y2,c,w){return svgEl('path',{d:`M${x1} ${y1} Q${(+x1+ +x2)/2} ${Math.min(+y1,+y2)-42} ${x2} ${y2}`,fill:'none',stroke:c||'#2a2f55','stroke-width':w||1.5},p);}
+function ewt(p,x1,y1,x2,y2,w){const t=svgEl('text',{x:(+x1+ +x2)/2+4,y:(+y1+ +y2)/2-7,fill:'#ffd166','text-anchor':'middle','font-size':11,'font-family':'JetBrains Mono,monospace'},p);t.textContent=w;return t;}
+function arrowL(p,x1,y1,x2,y2,c){const dx=+x2-+x1,dy=+y2-+y1,len=Math.sqrt(dx*dx+dy*dy),ux=dx/len,uy=dy/len;return svgEl('line',{x1:+x1+ux*24,y1:+y1+uy*24,x2:+x2-ux*26,y2:+y2-uy*26,stroke:c||'#2a2f55','stroke-width':2,'marker-end':'url(#da)'},p);}
+function arrowC(p,x1,y1,x2,y2,c){const dx=+x2-+x1,dy=+y2-+y1,len=Math.sqrt(dx*dx+dy*dy),ux=dx/len,uy=dy/len,sx=+x1+ux*24,sy=+y1+uy*24,ex=+x2-ux*26,ey=+y2-uy*26,mx=(sx+ex)/2,my=(sy+ey)/2;return svgEl('path',{d:`M${sx} ${sy} Q${mx-uy*50} ${my+ux*50} ${ex} ${ey}`,fill:'none',stroke:c||'#2a2f55','stroke-width':2,'marker-end':'url(#da)'},p);}
+function lbl(p,x,y,txt,c,fs){const t=svgEl('text',{x,y,fill:c||'#9ba3d4','text-anchor':'middle','font-size':fs||11,'font-family':'Source Sans 3,sans-serif'},p);t.textContent=txt;return t;}
+
+// HERO CANVAS
+(()=>{const c=document.getElementById('hero-canvas'),ctx=c.getContext('2d');let W,H,pts=[];function resize(){W=c.width=c.offsetWidth;H=c.height=c.offsetHeight;pts=[];for(let i=0;i<18;i++)pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4});}function draw(){ctx.clearRect(0,0,W,H);for(let i=0;i<pts.length;i++){for(let j=i+1;j<pts.length;j++){const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<200){ctx.strokeStyle=`rgba(108,99,255,${.5*(1-d/200)})`;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.stroke();}}pts[i].x+=pts[i].vx;pts[i].y+=pts[i].vy;if(pts[i].x<0||pts[i].x>W)pts[i].vx*=-1;if(pts[i].y<0||pts[i].y>H)pts[i].vy*=-1;ctx.fillStyle='rgba(108,99,255,.8)';ctx.beginPath();ctx.arc(pts[i].x,pts[i].y,3,0,Math.PI*2);ctx.fill();}requestAnimationFrame(draw);}window.addEventListener('resize',resize);resize();draw();})();
+
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:.08});
+document.querySelectorAll('.section').forEach(s=>obs.observe(s));
+function toggleQA(el){el.classList.toggle('open');el.nextElementSibling.classList.toggle('open');}
+
+// ── ISOMORPHISM ──
+function isoShow(type,btn){
+  document.querySelectorAll('#iso .ibtn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');
+  const g1=document.getElementById('iso-g1'),g2=document.getElementById('iso-g2'),map=document.getElementById('iso-map');
+  g1.innerHTML='';g2.innerHTML='';map.innerHTML='';
+  const v=document.getElementById('iso-verdict'),info=document.getElementById('iso-info');
+  if(type==='iso'){
+    ledge(g1,120,65,120,185,'#6c63ff',2);ledge(g1,120,65,220,125,'#6c63ff',2);ledge(g1,220,125,120,185,'#6c63ff',2);ledge(g1,120,65,20,125,'#6c63ff',2);ledge(g1,20,125,120,185,'#6c63ff',2);
+    vnode(g1,120,65,'a','#6c63ff','#534ab7','deg=2');vnode(g1,220,125,'b','#6c63ff','#534ab7','deg=3');vnode(g1,20,125,'c','#6c63ff','#534ab7','deg=3');vnode(g1,120,185,'d','#6c63ff','#534ab7','deg=2');
+    lbl(g1,120,22,'G₁','#9ba3d4',12);
+    ledge(g2,460,65,560,65,'#00d4aa',2);ledge(g2,560,65,560,185,'#00d4aa',2);ledge(g2,560,185,460,185,'#00d4aa',2);ledge(g2,460,185,460,65,'#00d4aa',2);ledge(g2,460,65,560,185,'#00d4aa',2);
+    vnode(g2,460,65,'1','#00d4aa','#0f6e56','deg=3');vnode(g2,560,65,'2','#00d4aa','#0f6e56','deg=2');vnode(g2,560,185,'3','#00d4aa','#0f6e56','deg=2');vnode(g2,460,185,'4','#00d4aa','#0f6e56','deg=3');
+    lbl(g2,510,22,'G₂','#9ba3d4',12);
+    [[220,125,460,65],[20,125,560,185],[120,65,560,65],[120,185,460,185]].forEach(([x1,y1,x2,y2])=>svgEl('line',{x1,y1,x2,y2,stroke:'#ffd166','stroke-width':1,'stroke-dasharray':'5 4'},map));
+    const ml=svgEl('text',{x:350,y:242,'text-anchor':'middle','font-size':11,'font-family':'JetBrains Mono,monospace',fill:'#ffd166'},map);ml.textContent='f: a↔2, b↔4, c↔3, d↔1  (degree-matched bijection)';
+    v.style.fill='#00d4aa';v.textContent='≅ ISOMORPHIC — same degree sequence [2,2,3,3]';
+    info.textContent='|V|=4 ✓, |E|=5 ✓, degree sequences [2,2,3,3] both ✓. Map degree-2 vertices to degree-2 and degree-3 to degree-3. Bijection f(a)=2,f(b)=4,f(c)=3,f(d)=1. Verify every edge: (a,b)→(2,4)✓, (a,c)→(2,3)✓, etc. All 5 edges correspond. Isomorphic.';
+  } else {
+    ledge(g1,120,65,220,145,'#6c63ff',2);ledge(g1,120,65,20,145,'#6c63ff',2);ledge(g1,220,145,120,205,'#6c63ff',2);ledge(g1,20,145,120,205,'#6c63ff',2);
+    vnode(g1,120,65,'a','#6c63ff','#534ab7','deg=2');vnode(g1,220,145,'b','#6c63ff','#534ab7','deg=2');vnode(g1,20,145,'c','#6c63ff','#534ab7','deg=2');vnode(g1,120,205,'d','#6c63ff','#534ab7','deg=2');
+    lbl(g1,120,22,'G₁  |V|=4','#9ba3d4',11);
+    ledge(g2,470,75,560,145,'#ff6b6b',2);ledge(g2,470,75,500,210,'#ff6b6b',2);ledge(g2,560,145,500,210,'#ff6b6b',2);
+    vnode(g2,470,75,'1','#ff6b6b','#993c1d','deg=2');vnode(g2,560,145,'2','#ff6b6b','#993c1d','deg=2');vnode(g2,500,210,'3','#ff6b6b','#993c1d','deg=2');
+    lbl(g2,510,22,'G₂  |V|=3 ✗','#ff6b6b',11);
+    v.style.fill='#ff6b6b';v.textContent='≇ NOT ISOMORPHIC — |V₁|=4 ≠ |V₂|=3. First check fails immediately.';
+    info.textContent='|V(G₁)|=4 but |V(G₂)|=3. A bijection between two sets of different sizes is impossible by definition. Not isomorphic — determined in O(1) without further analysis.';
+  }
+}
+isoShow('iso',null);
+
+// ── PATHS ──
+const pV={A:[165,65],B:[305,65],C:[445,135],D:[305,205],E:[165,205]};
+const pE={AB:[165,65,305,65],BC:[305,65,445,135],CD:[445,135,305,205],DA:[305,205,165,65],BD:[305,65,305,205],DE:[305,205,165,205]};
+const pCfg={
+  walk:{c:'#6c63ff',edges:['AB','BC','AB','BD'],verts:['A','B','C','D'],info:'Walk A→B→C→B→D: Edge AB is used TWICE — this is allowed. Vertex B visited twice. No restrictions in a walk. Length=4 (counting repeated edges). Walks are the least restricted traversal type.'},
+  trail:{c:'#00d4aa',edges:['AB','BC','CD','DA'],verts:['A','B','C','D','A'],info:'Trail A→B→C→D→A: No edge repeats. Vertex A appears at start AND end — allowed in a trail. This is a closed trail (circuit) since start=end. Every circuit is a closed trail. Length=4.'},
+  path:{c:'#ff6b6b',edges:['AB','BC','CD','DE'],verts:['A','B','C','D','E'],info:'Path A→B→C→D→E: No vertices or edges repeat. Simple path of length 4 (4 edges, 5 vertices). Length = vertices−1. Most restricted open walk type.'},
+  cycle:{c:'#ffd166',edges:['AB','BD','DA'],verts:['A','B','D'],info:'Cycle A→B→D→A: Closed, no intermediate vertex repeats, no edge repeats. Cycle of length 3 — the triangle, smallest possible cycle. Only A appears twice (as endpoints). All intermediate: B and D visited once.'},
+  circuit:{c:'#f97aad',edges:['AB','BC','CD','DA'],verts:['A','B','C','D','A'],info:'Circuit: a closed trail. Start=end=A. No edge repeats. Intermediate vertices can repeat (unlike cycle). This particular circuit happens to also be a cycle. A cycle is a special circuit where no intermediate vertex repeats.'}
+};
+function pathShow(type,btn){
+  document.querySelectorAll('#paths .ibtn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');
+  const cfg=pCfg[type],eL=document.getElementById('path-edges'),vL=document.getElementById('path-verts');
+  eL.innerHTML='';vL.innerHTML='';
+  Object.entries(pE).forEach(([k,[x1,y1,x2,y2]])=>{const a=cfg.edges.includes(k);svgEl('line',{x1,y1,x2,y2,stroke:a?cfg.c:'#2a2f55','stroke-width':a?3:1.5},eL);});
+  Object.entries(pV).forEach(([k,[x,y]])=>{const a=cfg.verts.includes(k);vnode(vL,x,y,k,a?cfg.c:'#1e2240',a?cfg.c:'#2a2f55');});
+  document.getElementById('path-info').textContent=cfg.info;
+}
+pathShow('walk',null);
+
+// ── COLOURING ──
+const colG={
+  k4:{v:[[350,55],[230,175],[470,175],[350,260]],e:[[0,1],[0,2],[0,3],[1,2],[1,3],[2,3]],colors:['#6c63ff','#00d4aa','#ff6b6b','#ffd166'],chi:'4',info:'K₄: every vertex adjacent to all others (degree 3 each). All 4 must differ. χ(K₄)=4. Kₙ is the exception in Brook\'s theorem — χ=Δ+1=4, not Δ=3.'},
+  c5:{v:[[350,50],[508,162],[448,290],[252,290],[192,162]],e:[[0,1],[1,2],[2,3],[3,4],[4,0]],colors:['#6c63ff','#00d4aa','#6c63ff','#00d4aa','#ff6b6b'],chi:'3',info:'C₅ (odd 5-cycle): try 2 colours alternating: A=Purple,B=Teal,C=Purple,D=Teal. Now E is adjacent to D(Teal) and A(Purple) — needs a 3rd colour. χ(C₅)=3. All odd cycles need 3 colours.'},
+  c6:{v:[[350,50],[490,120],[490,220],[350,290],[210,220],[210,120]],e:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,0]],colors:['#6c63ff','#00d4aa','#6c63ff','#00d4aa','#6c63ff','#00d4aa'],chi:'2',info:'C₆ (even 6-cycle): alternate Purple-Teal all the way around. When we close the loop: vertex 6 (Teal) is adjacent to vertex 5 (Purple) and vertex 1 (Purple) — no conflict! χ(C₆)=2. All even cycles need exactly 2 colours.'},
+  tree:{v:[[350,50],[220,145],[480,145],[155,240],[285,240],[415,240],[545,240]],e:[[0,1],[0,2],[1,3],[1,4],[2,5],[2,6]],colors:['#6c63ff','#00d4aa','#00d4aa','#6c63ff','#6c63ff','#6c63ff','#6c63ff'],chi:'2',info:'Tree: bipartite by definition (no cycles → no odd cycles). BFS from root alternating colours: root=Purple, children=Teal, grandchildren=Purple. No cycles → no conflict ever. χ(tree)=2 if any edge exists.'}
+};
+function colorShow(type,btn){
+  document.querySelectorAll('#color .ibtn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');
+  const cfg=colG[type],eL=document.getElementById('color-edges'),vL=document.getElementById('color-verts');
+  eL.innerHTML='';vL.innerHTML='';
+  cfg.e.forEach(([a,b])=>{const[x1,y1]=cfg.v[a],[x2,y2]=cfg.v[b];svgEl('line',{x1,y1,x2,y2,stroke:'#2a2f55','stroke-width':2},eL);});
+  cfg.v.forEach(([x,y],i)=>vnode(vL,x,y,String.fromCharCode(65+i),cfg.colors[i],cfg.colors[i]));
+  document.getElementById('color-chi').style.fill=cfg.colors[0];
+  document.getElementById('color-chi').textContent=cfg.chi;
+  document.getElementById('color-info').textContent=cfg.info;
+}
+colorShow('k4',null);
+
+// ── CRITICAL PATH ──
+const cpV2={S:[62,100],A:[205,50],B:[205,160],C:[375,50],D:[375,160],E:[525,50],T:[645,100]};
+const cpEL2=[['S','A',3],['S','B',4],['A','C',5],['A','B',2],['B','C',1],['B','D',3],['C','D',2],['C','E',4],['D','E',3],['E','T',2],['D','T',5]];
+const cpCrit2=new Set(['SA','AC','CD','DE','ET']);
+const cpSt=[
+  {info:'Project DAG: 7 nodes (S=start, T=end), 11 directed weighted arcs. Each weight = task duration. Goal: find longest path S→T (critical path) = minimum project duration.',ests:{S:0,A:'?',B:'?',C:'?',D:'?',E:'?',T:'?'},crit:[],label:'Step 1/4 — Setup'},
+  {info:'FORWARD PASS: S=0. A=max(0+3)=3. B=max(0+4,3+2)=max(4,5)=5. C=max(3+5,5+1)=max(8,6)=8. D=max(5+3,8+2)=max(8,10)=10. E=max(8+4,10+3)=max(12,13)=13. T=max(13+2,10+5)=max(15,15)=15. Project duration=15.',ests:{S:0,A:3,B:5,C:8,D:10,E:13,T:15},crit:[],label:'Step 2/4 — Forward Pass (EST)'},
+  {info:'BACKWARD PASS: T=15. E=15−2=13. D=min(15−5,13−3)=min(10,10)=10. C=min(13−4,10−2)=min(9,8)=8. B=min(10−3,8−1)=min(7,7)=7. A=min(8−5,7−2)=min(3,5)=3. S=min(3−3,7−4)=min(0,3)=0.',ests:{S:0,A:3,B:5,C:8,D:10,E:13,T:15},lsts:{S:0,A:3,B:7,C:8,D:10,E:13,T:15},crit:[],label:'Step 3/4 — Backward Pass (LST)'},
+  {info:'FLOAT=LST−EST: S=0,A=0,B=2,C=0,D=0,E=0,T=0. Critical (float=0): S,A,C,D,E,T. Critical Path: S→A→C→D→E→T, length=3+5+2+3+2=15. B has float=2: can delay B up to 2 units without delaying project.',ests:{S:0,A:3,B:5,C:8,D:10,E:13,T:15},lsts:{S:0,A:3,B:7,C:8,D:10,E:13,T:15},crit:['S','A','C','D','E','T'],label:'Step 4/4 — Critical Path'}
+];
+let cpCur=0;
+function cpRender(i){
+  const s=cpSt[i];
+  document.getElementById('cp-label').textContent=s.label;
+  document.getElementById('cp-prev').disabled=i===0;document.getElementById('cp-next').disabled=i===cpSt.length-1;
+  const eL=document.getElementById('cp-edges'),vL=document.getElementById('cp-verts');eL.innerHTML='';vL.innerHTML='';
+  cpEL2.forEach(([a,b,w])=>{const[x1,y1]=cpV2[a],[x2,y2]=cpV2[b],isc=s.crit.length>0&&cpCrit2.has(a+b);svgEl('line',{x1,y1,x2,y2,stroke:isc?'#00d4aa':'#2a2f55','stroke-width':isc?3:1.5,'marker-end':'url(#cpa)'},eL);ewt(eL,x1,y1,x2,y2,w);});
+  Object.entries(cpV2).forEach(([k,[x,y]])=>{const isc=s.crit.includes(k);vnode(vL,x,y,k,isc?'#00d4aa':'#1e2240',isc?'#00d4aa':'#2a2f55',s.ests[k]!==undefined?'EST:'+s.ests[k]:'');});
+  const rows=Object.entries(cpV2).map(([k])=>{const est=s.ests[k],lst=s.lsts?s.lsts[k]:'—',fl=s.lsts&&typeof s.lsts[k]==='number'&&typeof est==='number'?s.lsts[k]-est:'—',isc=s.crit.includes(k);return`<tr><td>${k}</td><td class="${isc?'done':''}">${est}</td><td>${lst}</td><td>${fl}</td><td class="${isc?'done':''}">${isc?'Yes ✓':fl===0&&s.lsts?'Yes':fl!=='—'&&s.lsts?'No':'—'}</td></tr>`;}).join('');
+  document.getElementById('cp-table').innerHTML=`<table class="step-table"><tr><th>Node</th><th>EST</th><th>LST</th><th>Float</th><th>Critical?</th></tr>${rows}</table>`;
+  document.getElementById('cp-info').textContent=s.info;
+}
+function cpStep(d){cpCur=Math.max(0,Math.min(cpSt.length-1,cpCur+d));cpRender(cpCur);}
+cpRender(0);
+
+// ── HAMILTONIAN ──
+const hamG={
+  k5:{v:[[350,50],[508,162],[448,288],[252,288],[192,162]],e:[[0,1],[1,2],[2,3],[3,4],[4,0],[0,2],[0,3],[1,3],[1,4],[2,4]],ham:[[0,1],[1,2],[2,3],[3,4],[4,0]],info:'K₅: n=5, every degree=4≥n/2=2.5. Dirac\'s theorem → circuit guaranteed. A→B→C→D→E→A highlighted. All 5 vertices visited exactly once, returning to start.'},
+  path:{v:[[120,110],[265,65],[265,165],[425,65],[425,165],[565,110]],e:[[0,1],[0,2],[1,2],[1,3],[2,4],[3,5],[4,5],[3,4]],ham:[[0,1],[1,3],[3,5],[5,4],[4,2],[2,0]],info:'Hamiltonian circuit: A→B→D→F→E→C→A. All 6 vertices visited exactly once. Not all edges used — only those forming the circuit (purple). Remaining edges (gray) exist but are not part of the circuit.'},
+  none:{v:[[350,65],[200,155],[350,200],[500,155],[350,108]],e:[[0,1],[0,2],[0,3],[0,4],[1,2],[3,2]],ham:[],info:'NO Hamiltonian circuit. Vertices B and D each have degree 1 — only one edge. A circuit must enter AND exit every vertex (≥2 edges). Degree-1 vertices make it impossible. Also Dirac fails: deg(B)=1<n/2=2.5.'}
+};
+function hamShow(type,btn){
+  document.querySelectorAll('#hamilton .ibtn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');
+  const cfg=hamG[type],eL=document.getElementById('ham-edges'),vL=document.getElementById('ham-verts');eL.innerHTML='';vL.innerHTML='';
+  const hs=new Set(cfg.ham.map(([a,b])=>[a,b].sort().join('-')));
+  cfg.e.forEach(([a,b])=>{const[x1,y1]=cfg.v[a],[x2,y2]=cfg.v[b],ih=hs.has([a,b].sort().join('-'));svgEl('line',{x1,y1,x2,y2,stroke:ih?'#6c63ff':'#2a2f55','stroke-width':ih?3.5:1.5},eL);});
+  cfg.v.forEach(([x,y],i)=>{const oh=cfg.ham.some(([a,b])=>a===i||b===i);vnode(vL,x,y,String.fromCharCode(65+i),oh&&cfg.ham.length?'#6c63ff':'#1e2240',oh&&cfg.ham.length?'#6c63ff':'#2a2f55');});
+  document.getElementById('ham-info').textContent=cfg.info;
+}
+hamShow('k5',null);
+
+// ── BIPARTITE ──
+const bipG={
+  k23:{X:[[210,90],[210,185]],Y:[[480,58],[480,135],[480,212]],info:'K(2,3): |X|=2 (purple), |Y|=3 (teal). Every X vertex connects to every Y vertex. Edges=2×3=6. deg(X vertices)=3, deg(Y vertices)=2. Complete bipartite — no edge missing between sides. No edges within X or within Y.'},
+  k33:{X:[[200,65],[200,135],[200,205]],Y:[[480,65],[480,135],[480,205]],info:'K(3,3): |X|=3, |Y|=3. Edges=9. Famous — K(3,3) is non-planar (Kuratowski\'s theorem). Cannot be drawn without crossing. Represents unsolvable "3 houses 3 utilities" puzzle.'},
+  star:{X:[[350,115]],Y:[[190,62],[510,62],[190,178],[510,178]],info:'Star K(1,4): 1 centre, 4 leaves. Edges=4. All trees are bipartite. Stars are the simplest bipartite graphs — one central vertex connecting to all others with no connections between leaves.'},
+  odd:{X:null,Y:null,odd:[[350,65],[225,205],[475,205]],info:'Triangle C₃ — NOT bipartite. Try BFS: A=Purple→B=Teal (adjacent to A)→C adjacent to A(Purple) and B(Teal), cannot be either. Odd cycle present. The fundamental theorem: bipartite ↔ no odd cycles. C₃ is the simplest counterexample.'}
+};
+function bipShow(type,btn){
+  document.querySelectorAll('#bipartite .ibtn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');
+  const cfg=bipG[type],eL=document.getElementById('bip-edges'),vL=document.getElementById('bip-verts');eL.innerHTML='';vL.innerHTML='';
+  if(type==='odd'){
+    const[A,B,C]=cfg.odd;svgEl('line',{x1:A[0],y1:A[1],x2:B[0],y2:B[1],stroke:'#ff6b6b','stroke-width':2},eL);svgEl('line',{x1:B[0],y1:B[1],x2:C[0],y2:C[1],stroke:'#ff6b6b','stroke-width':2},eL);svgEl('line',{x1:C[0],y1:C[1],x2:A[0],y2:A[1],stroke:'#ff6b6b','stroke-width':2},eL);
+    vnode(vL,A[0],A[1],'A','#ff6b6b','#ff6b6b');vnode(vL,B[0],B[1],'B','#ff6b6b','#ff6b6b');vnode(vL,C[0],C[1],'C','#ff6b6b','#ff6b6b');
+    lbl(vL,350,25,'NOT bipartite — odd cycle C₃ present','#ff6b6b',12);
+  } else {
+    cfg.X.forEach(([x1,y1])=>cfg.Y.forEach(([x2,y2])=>svgEl('line',{x1,y1,x2,y2,stroke:'#2a2f55','stroke-width':1.5},eL)));
+    cfg.X.forEach(([x,y],i)=>vnode(vL,x,y,'X'+(i+1),'#6c63ff','#534ab7'));
+    cfg.Y.forEach(([x,y],i)=>vnode(vL,x,y,'Y'+(i+1),'#00d4aa','#0f6e56'));
+    lbl(vL,cfg.X[0][0],25,'Set X','#6c63ff',12);lbl(vL,cfg.Y[0][0],25,'Set Y','#00d4aa',12);
+  }
+  document.getElementById('bip-info').textContent=cfg.info;
+}
+bipShow('k23',null);
+
+// ── DIGRAPHS ──
+function digShow(type,btn){
+  document.querySelectorAll('#digraph .ibtn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');
+  const eL=document.getElementById('dig-edges'),vL=document.getElementById('dig-verts');eL.innerHTML='';vL.innerHTML='';
+  const infos={strong:'STRONGLY CONNECTED: every vertex can reach every other following directed arrows. A→B→C→D→A forms a directed cycle. The extra edge A→C provides additional paths. No vertex is stranded — bidirectional reachability for all pairs.',weak:'WEAKLY CONNECTED (not strongly): One-directional chain A→B→C→D. Can reach D from A but never go back D→A following arrows. Ignoring directions it IS connected (weakly). Following directions it is NOT strongly connected.',scc:'MULTIPLE SCCs: {A,B} (mutual arrows — SCC1, purple), {C} (arrows out only — SCC2, gray), {D,E} (mutual — SCC3, teal), {F} (sink, no outgoing — SCC4, red). SCCs partition all vertices. Collapsing each SCC gives a DAG.'};
+  document.getElementById('dig-info').textContent=infos[type];
+  if(type==='strong'){
+    arrowL(eL,140,105,310,55,'#6c63ff');arrowL(eL,310,55,480,105,'#6c63ff');arrowL(eL,480,105,310,175,'#6c63ff');arrowL(eL,310,175,140,105,'#6c63ff');arrowL(eL,140,105,480,105,'#6c63ff');
+    [{l:'A',x:140,y:105},{l:'B',x:310,y:55},{l:'C',x:480,y:105},{l:'D',x:310,y:175}].forEach(({l,x,y})=>vnode(vL,x,y,l,'#6c63ff','#534ab7'));
+    lbl(vL,310,22,'Strongly connected','#6c63ff',12);
+  } else if(type==='weak'){
+    arrowL(eL,100,110,250,110,'#ffd166');arrowL(eL,250,110,400,110,'#ffd166');arrowL(eL,400,110,550,110,'#ffd166');
+    [{l:'A',x:100},{l:'B',x:250},{l:'C',x:400},{l:'D',x:550}].forEach(({l,x})=>vnode(vL,x,110,l,'#1e2240','#ffd166'));
+    lbl(vL,325,22,'Weakly connected — one-directional chain','#ffd166',11);
+  } else {
+    arrowL(eL,100,90,230,90,'#6c63ff');arrowC(eL,230,90,100,90,'#6c63ff');
+    arrowL(eL,230,90,370,90,'#2a2f55');arrowL(eL,370,90,500,90,'#2a2f55');
+    arrowL(eL,500,90,620,90,'#00d4aa');arrowC(eL,620,90,500,90,'#00d4aa');
+    arrowL(eL,620,90,620,170,'#2a2f55');
+    vnode(vL,100,90,'A','#6c63ff','#534ab7');vnode(vL,230,90,'B','#6c63ff','#534ab7');vnode(vL,370,90,'C','#1e2240','#2a2f55');vnode(vL,500,90,'D','#00d4aa','#0f6e56');vnode(vL,620,90,'E','#00d4aa','#0f6e56');vnode(vL,620,170,'F','#1e2240','#ff6b6b');
+    [{t:'SCC{A,B}',x:165,y:140,c:'#6c63ff'},{t:'SCC{C}',x:370,y:140,c:'#5c6494'},{t:'SCC{D,E}',x:560,y:58,c:'#00d4aa'},{t:'sink{F}',x:620,y:212,c:'#ff6b6b'}].forEach(({t,x,y,c})=>{const tx=svgEl('text',{x,y,fill:c,'text-anchor':'middle','font-size':10,'font-family':'JetBrains Mono,monospace'},vL);tx.textContent=t;});
+  }
+}
+digShow('strong',null);
+
+// ── MULTIGRAPHS ──
+function multiShow(type,btn){
+  document.querySelectorAll('#multi .ibtn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');
+  const cnt=document.getElementById('multi-content');cnt.innerHTML='';
+  const infos={simple:'Simple graph: exactly one edge between any pair, no self-loops. Standard assumption throughout Topics 1–8. Degree=number of distinct adjacent vertices. Handshaking: Σdeg=2|E|.',multi:'Multigraph: A-B has multiplicity 3 (three parallel edges). deg(A)=3+1=4. deg(B)=3+2=5. deg(C)=2. Σdeg=11=2×5.5? Wait: edges=3(A-B)+2(B-C)+1(A-C... not shown)... Here A-B(×3), B-C(×2): deg(A)=3, deg(B)=5, deg(C)=2. Σ=10=2×5 ✓.',pseudo:'Pseudograph: self-loops AND parallel edges. Self-loop at A contributes 2 to deg(A). deg(A)=2(loop)+2(parallel to B)=4. deg(B)=2(loop)+2(parallel to A)=4. Σdeg=8=2×4 ✓. A vertex with a self-loop cannot be properly coloured.'};
+  document.getElementById('multi-info').textContent=infos[type];
+  if(type==='simple'){
+    svgEl('line',{x1:180,y1:100,x2:520,y2:100,stroke:'#2a2f55','stroke-width':2},cnt);svgEl('line',{x1:180,y1:100,x2:350,y2:185,stroke:'#2a2f55','stroke-width':2},cnt);svgEl('line',{x1:520,y1:100,x2:350,y2:185,stroke:'#2a2f55','stroke-width':2},cnt);
+    vnode(cnt,180,100,'A','#6c63ff','#534ab7','deg=2');vnode(cnt,520,100,'B','#6c63ff','#534ab7','deg=2');vnode(cnt,350,185,'C','#6c63ff','#534ab7','deg=2');
+    lbl(cnt,350,28,'Simple graph — at most one edge per pair, no self-loops','#9ba3d4',11);
+  } else if(type==='multi'){
+    svgEl('path',{d:'M205 88 Q350 35 495 88',fill:'none',stroke:'#6c63ff','stroke-width':2.5},cnt);svgEl('line',{x1:205,y1:100,x2:495,y2:100,stroke:'#6c63ff','stroke-width':2.5},cnt);svgEl('path',{d:'M205 112 Q350 162 495 112',fill:'none',stroke:'#6c63ff','stroke-width':2.5},cnt);
+    svgEl('path',{d:'M495 88 Q545 58 595 88',fill:'none',stroke:'#00d4aa','stroke-width':2},cnt);svgEl('path',{d:'M495 112 Q545 142 595 112',fill:'none',stroke:'#00d4aa','stroke-width':2},cnt);
+    vnode(cnt,180,100,'A','#6c63ff','#534ab7','deg=3');vnode(cnt,520,100,'B','#6c63ff','#534ab7','deg=5');vnode(cnt,620,100,'C','#00d4aa','#0f6e56','deg=2');
+    [{t:'edge 1',x:350,y:28},{t:'edge 2',x:350,y:105},{t:'edge 3',x:350,y:172}].forEach(({t,x,y})=>{const tx=svgEl('text',{x,y,fill:'#ffd166','text-anchor':'middle','font-size':10,'font-family':'JetBrains Mono,monospace'},cnt);tx.textContent=t;});
+    lbl(cnt,350,192,'A-B multiplicity=3 (three parallel edges)','#9ba3d4',11);
+  } else {
+    svgEl('ellipse',{cx:200,cy:62,rx:30,ry:20,fill:'none',stroke:'#ff6b6b','stroke-width':2},cnt);svgEl('line',{x1:200,y1:82,x2:200,y2:100,stroke:'#ff6b6b','stroke-width':2},cnt);
+    svgEl('path',{d:'M225 88 Q350 38 475 88',fill:'none',stroke:'#6c63ff','stroke-width':2},cnt);svgEl('path',{d:'M225 112 Q350 158 475 112',fill:'none',stroke:'#6c63ff','stroke-width':2},cnt);
+    svgEl('ellipse',{cx:500,cy:62,rx:30,ry:20,fill:'none',stroke:'#ff6b6b','stroke-width':2},cnt);svgEl('line',{x1:500,y1:82,x2:500,y2:100,stroke:'#ff6b6b','stroke-width':2},cnt);
+    vnode(cnt,200,100,'A','#6c63ff','#534ab7','deg=4');vnode(cnt,500,100,'B','#6c63ff','#534ab7','deg=4');
+    lbl(cnt,350,192,'Red loops = self-loops (each adds 2 to degree)','#ff6b6b',11);
+    lbl(cnt,350,26,'Pseudograph — parallel edges AND self-loops','#9ba3d4',11);
+  }
+}
+multiShow('simple',null);
+
+// ── HANDSHAKING ──
+(()=>{
+  const svg=document.getElementById('hs-svg');
+  const verts=[[130,120],[300,60],[470,120],[380,205],[220,205]];
+  const labels=['A','B','C','D','E'];
+  const allE=[[0,1],[1,2],[2,3],[3,4],[4,0],[0,2],[1,3]];
+  let active=new Set([0,1,2,3,4]);
+  function render(){
+    svg.innerHTML='';
+    const degs=[0,0,0,0,0];
+    active.forEach(ei=>{const[a,b]=allE[ei];degs[a]++;degs[b]++;});
+    const tdeg=degs.reduce((s,d)=>s+d,0),ec=active.size;
+    active.forEach(ei=>{const[a,b]=allE[ei];const[x1,y1]=verts[a],[x2,y2]=verts[b];svgEl('line',{x1,y1,x2,y2,stroke:'#6c63ff','stroke-width':2},svg);});
+    verts.forEach(([x,y],i)=>{
+      const g=svgEl('g',{style:'cursor:pointer'},svg);
+      svgEl('circle',{cx:x,cy:y,r:24,fill:'#6c63ff',stroke:'#534ab7','stroke-width':2},g);
+      const t=svgEl('text',{x,y,fill:'#fff','text-anchor':'middle','dominant-baseline':'central','font-family':'JetBrains Mono,monospace','font-size':13,'font-weight':600},g);t.textContent=labels[i];
+      const d=svgEl('text',{x,y:+y+36,fill:'#9ba3d4','text-anchor':'middle','font-size':10,'font-family':'JetBrains Mono,monospace'},g);d.textContent='deg='+degs[i];
+      g.addEventListener('click',()=>{allE.forEach((e,ei)=>{if(e[0]===i||e[1]===i){if(active.has(ei))active.delete(ei);else active.add(ei);}});render();});
+    });
+    const ok=tdeg===2*ec;
+    svgEl('rect',{x:540,y:28,width:148,height:100,rx:8,fill:'#1e2240',stroke:'#2a2f55'},svg);
+    [{t:'Σ deg = '+tdeg,y:58,c:'#e8eaf6'},{t:'2×|E| = 2×'+ec+'='+2*ec,y:84,c:'#e8eaf6'},{t:ok?'✓ Lemma holds':'Verifying...',y:110,c:ok?'#00d4aa':'#ffd166'}].forEach(({t,y,c})=>{const tx=svgEl('text',{x:614,y,fill:c,'text-anchor':'middle','font-size':12,'font-family':'JetBrains Mono,monospace'},svg);tx.textContent=t;});
+    document.getElementById('hs-info').textContent=`Σdeg=${tdeg} = 2×${ec} = 2|E|. ${ok?'Handshaking Lemma holds ✓':''} Click any vertex to toggle all its edges on/off.`;
+  }
+  render();
+})();
+
+// ── DIJKSTRA ──
+const djV={S:[60,100],A:[205,50],B:[205,158],C:[375,50],D:[375,158],T:[540,100]};
+const djE=[['S','A',4],['S','B',2],['A','B',1],['A','C',5],['B','C',3],['B','D',6],['C','D',2],['C','T',4],['D','T',3]];
+const djSt=[
+  {info:'INIT: dist(S)=0, all others=∞. We know distance from S to S is 0 for certain. All other distances unknown. Pick S as first current (minimum among all unvisited).',dists:{S:0,A:'∞',B:'∞',C:'∞',D:'∞',T:'∞'},curr:'S',done:[],short:[],table:[{v:'S',d:0,p:'-',s:'curr'},{v:'A',d:'∞',p:'-',s:''},{v:'B',d:'∞',p:'-',s:''},{v:'C',d:'∞',p:'-',s:''},{v:'D',d:'∞',p:'-',s:''},{v:'T',d:'∞',p:'-',s:''}]},
+  {info:'PROCESS S (dist=0): A — candidate=0+4=4<∞ → UPDATE dist(A)=4. B — 0+2=2<∞ → UPDATE dist(B)=2. Mark S VISITED (distance final forever). Pick min unvisited: B (dist=2).',dists:{S:0,A:4,B:2,C:'∞',D:'∞',T:'∞'},curr:'B',done:['S'],short:['S-B'],table:[{v:'S',d:0,p:'-',s:'done'},{v:'B',d:2,p:'S',s:'upd'},{v:'A',d:4,p:'S',s:'upd'},{v:'C',d:'∞',p:'-',s:''},{v:'D',d:'∞',p:'-',s:''},{v:'T',d:'∞',p:'-',s:''}]},
+  {info:'PROCESS B (dist=2): A — 2+1=3<4 → UPDATE dist(A)=3, prev=B (better path found!). C — 2+3=5<∞ → UPDATE. D — 2+6=8<∞ → UPDATE. Mark B visited. Pick min: A (dist=3).',dists:{S:0,A:3,B:2,C:5,D:8,T:'∞'},curr:'A',done:['S','B'],short:['S-B','B-A'],table:[{v:'S',d:0,p:'-',s:'done'},{v:'B',d:2,p:'S',s:'done'},{v:'A',d:3,p:'B',s:'upd'},{v:'C',d:5,p:'B',s:'upd'},{v:'D',d:8,p:'B',s:'upd'},{v:'T',d:'∞',p:'-',s:''}]},
+  {info:'PROCESS A (dist=3): C — 3+5=8>5 → NO UPDATE (existing path via B is better). Mark A visited. Pick min unvisited: C (dist=5).',dists:{S:0,A:3,B:2,C:5,D:8,T:'∞'},curr:'C',done:['S','B','A'],short:['S-B','B-A'],table:[{v:'S',d:0,p:'-',s:'done'},{v:'B',d:2,p:'S',s:'done'},{v:'A',d:3,p:'B',s:'done'},{v:'C',d:5,p:'B',s:'curr'},{v:'D',d:8,p:'B',s:''},{v:'T',d:'∞',p:'-',s:''}]},
+  {info:'PROCESS C (dist=5): D — 5+2=7<8 → UPDATE dist(D)=7, prev=C. T — 5+4=9<∞ → UPDATE dist(T)=9, prev=C. Mark C visited. Pick min: D (dist=7).',dists:{S:0,A:3,B:2,C:5,D:7,T:9},curr:'D',done:['S','B','A','C'],short:['S-B','B-C'],table:[{v:'S',d:0,p:'-',s:'done'},{v:'B',d:2,p:'S',s:'done'},{v:'A',d:3,p:'B',s:'done'},{v:'C',d:5,p:'B',s:'done'},{v:'D',d:7,p:'C',s:'upd'},{v:'T',d:9,p:'C',s:'upd'}]},
+  {info:'PROCESS D (dist=7): T — 7+3=10>9 → NO UPDATE (existing via C is better). Mark D visited. Only T remains.',dists:{S:0,A:3,B:2,C:5,D:7,T:9},curr:'T',done:['S','B','A','C','D'],short:['S-B','B-C','C-D'],table:[{v:'S',d:0,p:'-',s:'done'},{v:'B',d:2,p:'S',s:'done'},{v:'A',d:3,p:'B',s:'done'},{v:'C',d:5,p:'B',s:'done'},{v:'D',d:7,p:'C',s:'done'},{v:'T',d:9,p:'C',s:'curr'}]},
+  {info:'DONE! All visited. Shortest distances: A=3,B=2,C=5,D=7,T=9. Path S→T: trace prev — T←C←B←S. Path = S→B→C→T, cost=2+3+4=9 (highlighted teal). Complexity: O(V²) with simple array.',dists:{S:0,A:3,B:2,C:5,D:7,T:9},curr:null,done:['S','B','A','C','D','T'],short:['S-B','B-C','C-T'],table:[{v:'S',d:0,p:'-',s:'done'},{v:'B',d:2,p:'S',s:'done'},{v:'A',d:3,p:'B',s:'done'},{v:'C',d:5,p:'B',s:'done'},{v:'D',d:7,p:'C',s:'done'},{v:'T',d:9,p:'C',s:'done'}]}
+];
+let djCur=0;
+function djRender(i){
+  const s=djSt[i];
+  document.getElementById('dj-label').textContent='Step '+(i+1)+'/'+djSt.length;
+  document.getElementById('dj-prev').disabled=i===0;document.getElementById('dj-next').disabled=i===djSt.length-1;
+  const eL=document.getElementById('dj-edges'),vL=document.getElementById('dj-verts');eL.innerHTML='';vL.innerHTML='';
+  djE.forEach(([a,b,w])=>{const[x1,y1]=djV[a],[x2,y2]=djV[b],ks=[a+'-'+b,b+'-'+a],isS=ks.some(k=>s.short.includes(k));svgEl('line',{x1,y1,x2,y2,stroke:isS?'#00d4aa':'#2a2f55','stroke-width':isS?3:1.5},eL);ewt(eL,x1,y1,x2,y2,w);});
+  Object.entries(djV).forEach(([k,[x,y]])=>{const isDone=s.done.includes(k),isCurr=s.curr===k;vnode(vL,x,y,k,isCurr?'#ffd166':isDone?'#00d4aa':'#1e2240',isCurr?'#ba7517':isDone?'#0f6e56':'#2a2f55','d='+s.dists[k]);});
+  const sl={done:'✓ Done',curr:'→ Current',upd:'↑ Updated','':'waiting'};
+  const rows=s.table.map(r=>`<tr><td>${r.v}</td><td class="${r.s}">${r.d}</td><td>${r.p}</td><td class="${r.s}">${sl[r.s]||'—'}</td></tr>`).join('');
+  document.getElementById('dj-table').innerHTML=`<table class="step-table"><tr><th>Vertex</th><th>Distance</th><th>Via</th><th>Status</th></tr>${rows}</table><div style="display:flex;gap:12px;margin-top:6px;font-size:11px;flex-wrap:wrap;color:var(--text3)"><span style="color:#ffd166">■ Current</span><span style="color:#00d4aa">■ Visited/Path</span><span style="color:#6c63ff">■ Updated</span></div>`;
+  document.getElementById('dj-info').textContent=s.info;
+}
+function djStep(d){djCur=Math.max(0,Math.min(djSt.length-1,djCur+d));djRender(djCur);}
+function djReset(){djCur=0;djRender(0);}
+djRender(0);
+</script>
+</body>
+</html>
